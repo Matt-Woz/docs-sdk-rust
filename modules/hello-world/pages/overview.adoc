@@ -28,7 +28,7 @@ xref:project-docs:sdk-release-notes.adoc[] |
 
 
 
-What's the point of a fast and rustble database if it's not easy to develop for?
+What's the point of a fast and scalable database if it's not easy to develop for?
 Couchbase gives you the {name_platform} APIs to work with Capella, our managed solution, or self-managed options in your private Cloud or datacenter.
 
 
