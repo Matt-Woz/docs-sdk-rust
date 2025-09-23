@@ -30,7 +30,7 @@ The simplest way to create a `Cluster` object is to call `Cluster.connect()` wit
 Couchbase Capella::
 +
 --
-[source,scala]
+[source,rust]
 ----
 include::devguide:example$src/capella_sample.rs[tag=connect,indent=0]
 ----
@@ -61,9 +61,10 @@ The client fetches the full address list from the first node it is able to conta
 
 === Waiting for Bootstrap Completion
 
-When `Cluster.connect` is called, the client begins bootstrapping the cluster connection, which includes fetching the cluster configuration and opening connections to all of the KV nodes.
+When `Cluster.connect` is called, the client begins bootstrapping the cluster connection, which includes fetching the cluster configuration and opening connections to all of the KV (Data Service) nodes.
 Opening resources after initial `Cluster.connect` is asynchronous.
-That is, the call to `cluster.bucket` will complete instantly, and opening that resource will continue in the background - for each bucket that you open the SDK will open a new set of KV connections and manage a different bucket configuration from the cluster.
+That is, the call to `cluster.bucket` will complete instantly, and opening that resource will continue in the background --
+for each bucket that you open the SDK will open a new set of KV connections and manage a different bucket configuration from the cluster.
 
 You can force waiting for the resource to be opened with a call to `wait_until_ready`, which is available on both the `Cluster` and `Bucket`.
 Here is an example of using it on the bucket:
