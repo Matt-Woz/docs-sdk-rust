@@ -73,8 +73,8 @@ Then, we get the document.
 
 If it's successful, we convert the document's content into a `serde_json::Value`.
 
-We can use `contentAs` to return the document's content in all sorts of ways: as a String, as an int, as a custom type, it's very flexible.
-Here, we've asked for it to be returned as a `Value` - a flexible way to handle JSON.
+We can use `contentAs` to return the document's content in all sorts of ways: as a String, as an int, as a custom type; it's very flexible.
+Here, we've asked for it to be returned as a `Value` -- a flexible way to handle JSON.
 
 Finally, if the conversion to a `Value` was successful, we try to get the "status" field (which returns an `Option`), and print it if we were successful.
 
@@ -158,14 +158,14 @@ The options differ depend on what Couchbase Server version is in use.
 If 6.5 or above is being used, you can take advantage of the xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[Durable Write] feature, in which Couchbase Server will only return success to the SDK after the requested replication level has been achieved.
 The three replication levels are:
 
-`Majority` - The server will ensure that the change is available in memory on the majority of configured replicas.
+`Majority` -- The server will ensure that the change is available in memory on the majority of configured replicas.
 
-`MajorityAndPersistToActive` - Majority level, plus persisted to disk on the active node.
+`MajorityAndPersistToActive` -- Majority level, plus persisted to disk on the active node.
 
-`PersistToMajority` - Majority level, plus persisted to disk on the majority of configured replicas.
+`PersistToMajority` -- Majority level, plus persisted to disk on the majority of configured replicas.
 
 The options are in increasing levels of failure-resistance.
-Note that nothing comes for free - for a given node, waiting for writes to storage is considerably slower than waiting for it to be available in-memory.
+Note that nothing comes for free -- for a given node, waiting for writes to storage is considerably slower than waiting for it to be available in-memory.
 These trade offs, as well as which settings may be tuned, are discussed in the xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[durability page].
 
 To stress, durability is a useful feature but should not be the default for most applications, as there is a performance consideration, and the default level of safety provided by Couchbase will be reasonable for the majority of situations.
