@@ -14,7 +14,7 @@ The Common Flag specifies whether the data is JSON, a non-JSON string, or raw bi
 Transcoders in the {name-sdk} work a little differently to other SDKs.
 The SDK exposes a number of `{operation-name}_raw` functions for supporting types that do not implement `Serialize` and/or should not be serialized to JSON using `serde_json`.
 Transcoding with these functions occurs outside the function, to be idiomatic to the Rust ecosystem.
-Due to a lack of reflection in Rust, the transcoders implemented in the SDK do not work in the same way as other SDKs.
+Owing to a lack of reflection in Rust, the transcoders implemented in the SDK do not work in the same way as other SDKs.
 We'll explore how this works in the examples below.
 
 On retrieving data from Couchbase, the fetched `byte[]` and Common Flag are passed to a transcoder.
