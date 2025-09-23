@@ -14,21 +14,17 @@ include::{version-common}@sdk:shared:partial$n1ql-queries.adoc[tag=intro]
 // Prepared Statements for Query Optimization
 include::{version-common}@sdk:shared:partial$n1ql-queries.adoc[tag=prepared]
 
-For the Scala SDK, the `adhoc` parameter should be set to `false` for a plan to be prepared, or a prepared plan to be reused.
-Do not turn off the `adhoc` flag for _every_ query to Server 6.0 and earlier, since only a finite number of query plans (currently 5000) can be stored in the SDK.
+For the Rust SDK, the `adhoc` parameter should be set to `false` for a plan to be prepared, or a prepared plan to be reused.
 
 [source,scala]
 ----
-include::devguide:example$scala/Queries.scala[tag=positional,indent=0]
+include::devguide:example$src/queries.rs[tag=adhocquery,indent=0]
 ----
-
 
 == Indexes
 
 The Couchbase query service makes use of xref:{version-server}@server:learn:services-and-indexes/indexes/indexes.adoc[_indexes_] in order to do its work.
-Indexes replicate subsets of documents from data nodes over to index nodes,
-allowing specific data (for example, specific document properties) to be retrieved quickly,
-and to distribute load away from data nodes in xref:{version-server}@server:learn:services-and-indexes/services/services.adoc[MDS] topologies.
+Indexes replicate subsets of documents from data nodes over to index nodes, allowing specific data (for example, specific document properties) to be retrieved quickly, and to distribute load away from data nodes in xref:{version-server}@server:learn:services-and-indexes/services/services.adoc[MDS] topologies.
 
 [IMPORTANT]
 In order to make a bucket queryable, it must have at least one index defined.
@@ -60,16 +56,15 @@ WHERE name="Glasgow Grand Central" OR email="grandcentralhotel@example.com";
 ----
 
 Indexes help improve the performance of a query.
-When an index includes the actual values of all the fields specified in the query,
-the index _covers_ the query, and eliminates the need to fetch the actual values from the Data Service.
+When an index includes the actual values of all the fields specified in the query, the index _covers_ the query, and eliminates the need to fetch the actual values from the Data Service.
 An index, in this case, is called a _covering index_, and the query is called a _covered_ query.
 For more information, see xref:{version-server}@server:n1ql:n1ql-language-reference/covering-indexes.adoc[Covering Indexes].
 
 You can also create and define indexes in the SDK using:
 
-[source,scala]
+[source,rust]
 ----
-include::example$N1qlQuery.scala[tag=create-index,indent=0]
+include::devguide:example$src/queries.rs[tag=createindexes,indent=0]
 ----
 
 == Index Building
@@ -87,14 +82,13 @@ BUILD INDEX ON `travel-sample`.inventory.hotel(`#primary`, `ix_name`, `ix_email`
 ----
 
 The indexes are not built until the `BUILD INDEX` statement is executed.
-At this point, the server scans all of the documents in the `users` bucket,
-and indexes it for all of the applicable indexes (in this case, those that have a `name` or `email` field).
+At this point, the server scans all of the documents in the `users` bucket, and indexes it for all of the applicable indexes (in this case, those that have a `name` or `email` field).
 
 Building deferred indexes can also be done via the SDK:
 
-[source,scala]
+[source,rust]
 ----
-include::example$N1qlQuery.scala[tag=build-index,indent=0]
+include::devguide:example$src/queries.rs[tag=deferredindexes,indent=0]
 ----
 
 Note that the build step is still asynchronous, so `watchIndexes` is used to wait for the indexes to be completed.
@@ -106,7 +100,14 @@ include::{version-common}@sdk:shared:partial$n1ql-queries.adoc[tag=index-consist
 
 The following options are available:
 
-include::{version-server}@server:learn:page$services-and-indexes/indexes/index-replication.adoc[tag=scan_consistency]
+* `ScanConsistency::NotBounded`: Executes the query immediately, without requiring any consistency for the query.
+If index-maintenance is running behind, out-of-date results may be returned.
+* `ScanConsistency::AtPlus`: Executes the query, requiring indexes first to be updated to the timestamp of the last update.
+If index-maintenance is running behind, the query waits for it to catch up.
+* `ScanConsistency::RequestPlus`: Executes the query, requiring the indexes first to be updated to the timestamp of the current query-request.
+If index-maintenance is running behind, the query waits for it to catch up.
+
+For {sqlpp}, the default consistency is `NotBounded`.
 
 * A {sqlpp} query using the default `NotBounded` scan consistency will not wait for any indexes to finish updating before running the query and returning results, meaning that results are returned quickly, but the query will not return any documents that are yet to be indexed.
 
@@ -115,18 +116,16 @@ Select this when consistency is always more important than performance.
 
 * For a middle ground, `AtPlus` is a "read your own write" (RYOW) option, which means it just waits for the documents that you specify to be indexed.
 
-For {sqlpp}, the default consistency is `not_bounded`.
-
 Here's how to specify the `RequestPlus` scan consistency level:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Queries.scala[tag=request-plus,indent=0]
+include::devguide:example$src/queries.rs[tag=requestplus,indent=0]
 ----
 
 And the `AtPlus` level is represented with `QueryScanConsistency.ConsistentWith`:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Queries.scala[tag=at-plus,indent=0]
+include::devguide:example$src/queries.rs[tag=atplus,indent=0]
 ----

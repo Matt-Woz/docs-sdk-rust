@@ -2,14 +2,12 @@
 :description: Sub-Document operations can be used to efficiently access and change parts of documents.
 :page-aliases: ROOT:sdk-xattr-example.adoc
 
-
 [abstract]
 {description}
 
 Sub-Document operations may be quicker and more network-efficient than _full-document_ operations such as _upsert_, _replace_ and _get_ because they only transmit the accessed sections of the document over the network.
 
 Sub-Document operations are also atomic, in that if one Sub-Document mutation fails then all will, allowing safe modifications to documents with built-in concurrency control.
-
 
 == Sub-Documents
 
@@ -56,60 +54,34 @@ Considering the document:
 
 The paths `name`, `addresses.billing.country` and `purchases.complete[0]` are all valid paths.
 
-
 == Retrieving
 
 The _lookupIn_ operations query the document for certain path(s); these path(s) are then returned.
 You have a choice of actually retrieving the document path using the _get_ Sub-Document operation, or simply querying the existence of the path using the _exists_ Sub-Document operation.
 The latter saves even more bandwidth by not retrieving the contents of the path if it is not needed.
 
-.Imports
-The examples use the following imports:
-
-[source,scala]
-----
-include::devguide:example$scala/SubDocument.scala[tag=imports,indent=0,indent=0]
-----
-
 .Retrieve Sub-Document value
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=get]
-----
-
-NOTE: Use `import com.couchbase.client.scala.kv.LookupInSpec._` to make sure all operations are in scope.
-
-Operations in the Scala SDK return a `Try` to indicate success or failure.
-It can be hard to read multiple nested `Try` so you may prefer to use either flatMap:
-
-[source,scala]
-----
-include::devguide:example$scala/SubDocument.scala[tag=get-flatmap]
-----
-
-or a for-comprehension:
-
-[source,scala]
-----
-include::devguide:example$scala/SubDocument.scala[tag=get-forcomp]
+include::devguide:example$src/subdocument.rs[tag=get,indent=0]
 ----
 
 .Check existence of Sub-Document path
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=exists]
+include::devguide:example$src/subdocument.rs[tag=exists,indent=0]
 ----
 
-NOTE: LookupInResult has an `exists` method, but this should not be confused with the exists __operation__.  The `exists` method
-is used to check if anything was returned by the server for a given operation.  The result of the exists operation should
-be checked with `contentAs[Boolean]`, as in the example.
+NOTE: LookupInResult has an `exists` method, but this should not be confused with the exists __operation__.
+The `exists` method is used to check if anything was returned by the server for a given operation.
+The result of the exists operation should be checked with `contentAs[Boolean]`, as in the example.
 
 Multiple operations can be combined, and this can be most neatly done with a for-comprehension:
 
 .Combine multiple lookup operations
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=combine]
+include::devguide:example$src/subdocument.rs[tag=combine,indent=0]
 ----
 
 == Mutating
@@ -118,87 +90,81 @@ Mutation operations modify one or more paths in the document.
 The simplest of these operations is _upsert_, which, similar to the fulldoc-level _upsert_, will either modify the value of an existing path or create it if it does not exist:
 
 .Upserting a new Sub-Document value
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=upsert]
+include::devguide:example$src/subdocument.rs[tag=upsert,indent=0]
 ----
-
-NOTE: Use `import com.couchbase.client.scala.kv.MutateInSpec._` to make sure all operations are in scope.
 
 Likewise, the _insert_ operation will only add the new value to the path if it does not exist:
 
 .Inserting a Sub-Document value
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=insert]
+include::devguide:example$src/subdocument.rs[tag=insert,indent=0]
 ----
 
 Dictionary values can also be replaced or removed, and you may combine any number of mutation operations within the same general _mutateIn_ API.
 Here's an example of one which replaces one path and removes another.
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=multi]
+include::devguide:example$src/subdocument.rs[tag=combine_mutate,indent=0]
 ----
 
-NOTE: `mutateIn` is an _atomic_ operation.  If any single operation fails, then the entire document is left unchanged.
+NOTE: `mutateIn` is an _atomic_ operation.
+If any single operation fails, then the entire document is left unchanged.
 
 == Supported Types
 
-Mutation operations can take primitives (`String`, `Int`, etc.), along with any type for which an `Encodable` can be
-found.  This includes the built-in JSON library (`JsonObject` and `JsonArray`), many type from third-party JSON libraries,
-and Scala case classes.
+Mutation operations can take primitives (`String`, `Int`, etc.), along with any type for which a `Serialize` implementation can be found.
 
 See the xref:kv-operations.adoc#json[Data Operations page] for more details.
-
 
 == Array Append and Prepend
 
 The _arrayPrepend_ and _arrayAppend_ operations are true array prepend and append operations.
 Unlike fulldoc _append_/_prepend_ operations (which simply concatenate bytes to the existing value), _arrayAppend_ and _arrayPrepend_ are JSON-aware:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=array-append]
+include::devguide:example$src/subdocument.rs[tag=array_append,indent=0]
 ----
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=array-prepend]
+include::devguide:example$src/subdocument.rs[tag=array_prepend,indent=0]
 ----
 
 If your document only needs to contain an array, you do not have to create a top-level object wrapper to contain it.
 Simply initialize the document with an empty array and then use the empty path for subsequent Sub-Document array operations:
 
 .Creating and populating an array document
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=array-create]
+include::devguide:example$src/subdocument.rs[tag=array_document,indent=0]
 ----
 
 If you wish to create an array if it does not exist and also push elements to it within the same operation you may use the <<subdoc_create_path,_createPath_>> option:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=array-upsert]
+include::devguide:example$src/subdocument.rs[tag=array_upsert,indent=0]
 ----
-
 
 == Arrays as Unique Sets
 
 Limited support also exists for treating arrays like unique sets, using the _arrayAddUnique_ command.
 This will do a check to determine if the given value exists or not before actually adding the item to the array:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=array-unique]
+include::devguide:example$src/subdocument.rs[tag=array_add_unique,indent=0]
 ----
 
 Note that currently the _arrayAddUnique_ will fail with a _PathMismatchException_ if the array contains JSON _floats_, _objects_, or _arrays_.
 The _arrayAddUnique_ operation will also fail with _CannotInsertValueException_ if the value to be added is one of those types as well.
 
 Note that the actual position of the new element is undefined, and that the array is not ordered.
-
 
 == Array Insertion
 
@@ -207,33 +173,31 @@ While _append_ will place a new item at the _end_ of an array and _prepend_ will
 The position is indicated by the last path component, which should be an array index.
 For example, to insert `"cruel"` as the second element in the array `["Hello", "world"]`, the code would look like:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=array-insert]
+include::devguide:example$src/subdocument.rs[tag=array_insert,indent=0]
 ----
 
 // for your examples, above, CD: “I feel like somewhere in this we should also just a an example path like "my.path[1]" too, just to show how to use the index with a nested path. I don't think it's necessarily clear.”
 
-Note that the array must already exist and that the index must be valid (i.e.
-it must not point to an element which is out of bounds).
-
+Note that the array must already exist and that the index must be valid (i.e. it must not point to an element which is out of bounds).
 
 == Counters and Numeric Fields
 
 Counter operations allow the manipulation of a _numeric_ value inside a document.
 These operations are logically similar to the _increment_ and _decrement_ full-document operations:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=counter-inc]
+include::devguide:example$src/subdocument.rs[tag=counter_increment,indent=0]
 ----
 
 The _increment_ and _decrement_ operations perform simple arithmetic against a numeric value.
 The updated value is returned.
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=counter-dec]
+include::devguide:example$src/subdocument.rs[tag=counter_decrement,indent=0]
 ----
 
 The existing value for counter operations must be within range of a 64 bit signed integer.
@@ -246,13 +210,12 @@ Note that there are several differences as compared to the full-document counter
 Full-document counters will use normal C semantics for overflow (in which the overflow value is carried over above 0), and will silently fail on underflow, setting the value to 0 instead.
 * Sub-Document counter operations can operate on any numeric value within a document, while xref:kv-operations.adoc#atomic-counter-operations[full-document counter operations] require a specially formatted counter document with only the counter value.
 
-
 == Executing Multiple Operations
 
 Multiple Sub-Document operations can be executed at once on the same document, allowing you to retrieve or modify several Sub-Documents at once.
 When multiple operations are submitted within the context of a single _lookupIn_ or _mutateIn_ command, the server will execute all the operations with the same version of the document.
 
-NOTE: Unlike _batched operations_ which is simply a way of sending multiple individual operations efficiently on the network, multiple Sub-Document operations are formed into a single command packet, which is then executed atomically on the server.
+NOTE: Multiple Sub-Document operations are formed into a single command packet, which is then executed atomically on the server.
 You can submit up to 16 operations at a time.
 
 When submitting multiple _mutation_ operations within a single _mutateIn_ command, those operations are considered to be part of a single transaction: if any of the mutation operations fail, the server will logically roll-back any other mutation operations performed within the _mutateIn_, even if those commands would have been successful had another command not failed.
@@ -260,7 +223,6 @@ When submitting multiple _mutation_ operations within a single _mutateIn_ comman
 When submitting multiple _retrieval_ operations within a single _lookupIn_ command, the status of each command does not affect any other command.
 This means that it is possible for some retrieval operations to succeed and others to fail.
 While their statuses are independent of each other, you should note that operations submitted within a single _lookupIn_ are all executed against the same _version_ of the document.
-
 
 == Creating Paths
 
@@ -291,11 +253,10 @@ By default the automatic creation of parents is disabled, as a simple typo in ap
 Sometimes it is necessary to have the server create the hierarchy however.
 In this case, the _createPath_ option may be used.
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=create-path]
+include::devguide:example$src/subdocument.rs[tag=create_path,indent=0]
 ----
-
 
 ////
 Multiple sub-document operations (for a single document) can be specified in a single sub-document request.
@@ -308,84 +269,41 @@ To perform sub-document operations on a (bulk) list of documents, follow the bul
 
 // Read from Replica
 
-
-
-== Reading Sub-Documents From Replicas
-
-Couchbase Server 7.6 and later support Sub-Doc lookup from replicas, which could be used to, for example, increase availability during node failover scenarios.
-
-The `collection.lookupInAnyReplica()` method reads from all replicas and the active, and returns the first response.
-
-[source,java]
-----
-include::example$SubDocument.scala[tag=lookup-in-any-replica,indent=0]
-----
-
-If no replica or active returns a successful result, a `Failure(DocumentUnretrivableException)` is returned.
-This includes if the document does not exist.
-
-The `collection.lookupInAllReplicas()` fetches all available replicas (and the active), and returns all responses.
-
-[source,java]
-----
-include::example$SubDocument.scala[tag=lookup-in-all-replicas,indent=0]
-----
-
-Errors from the replicas and the active are ignored, so if all fail (including if the document does not exist), an empty stream is returned.
-
-You may want to use `lookupInAllReplicas` to build a consensus,
-but it's more likely that you'll make use of `lookupInAnyReplica` as a fallback to a `lookupIn`, when the active node times out.
-
-
 == Concurrent Modifications
 
 Concurrent Sub-Document operations on different parts of a document will not conflict.
 For example the following two blocks can execute concurrently without any risk of conflict:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=concurrent]
+include::devguide:example$src/subdocument.rs[tag=concurrent_subdoc_operations,indent=0]
 ----
 
 Even when modifying the _same_ part of the document, operations will not necessarily conflict.
 For example, two concurrent _arrayAppend_ operations to the same array will both succeed, never overwriting the other.
 
-
-So in some cases the application will not need to supply a xref:concurrent-document-mutations.adoc[CAS] value to protect
-against concurrent modifications.
+So in some cases the application will not need to supply a xref:concurrent-document-mutations.adoc[CAS] value to protect against concurrent modifications.
 
 If CAS is required then it can be provided like this:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=cas]
+include::devguide:example$src/subdocument.rs[tag=cas,indent=0]
 ----
-
 
 == Durability
 
-Couchbase's xref:2.7@java-sdk::durability.adoc[traditional durability], using `PersistTo` and `ReplicateTo`, is
-xref:concept-docs:durability-replication-failure-considerations.adoc#older-server-versions[still available], particularly for talking to Couchbase Server 6.0 and earlier:
+For more information see xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[Durable Writes], which uses the concept of xref:{version-server}@server:learn:data/durability.adoc#majority[majority] to indicate the number of configured Data Service nodes to which commitment is required:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=durability,indent=0]
+include::devguide:example$src/subdocument.rs[tag=durability,indent=0]
 ----
-
-In Couchbase Server 6.5 and up, this is built upon with xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[Durable Writes],
-which uses the concept of xref:{version-server}@server:learn:data/durability.adoc#majority[majority] to indicate the number of configured Data Service nodes to which commitment is required:
-
-[source,scala]
-----
-include::devguide:example$scala/SubDocument.scala[tag=sync-durability,indent=0]
-----
-
 
 == Error Handling
 
 Sub-Document operations have their own set of errors.
-When programming with Sub-Document, be prepared for any of the full-document errors (such as _DocumentNotFoundException_) as well as
-special Sub-Document errors which are received when certain constraints are not satisfied.
+When programming with Sub-Document, be prepared for any of the full-document errors (such as _DocumentNotFoundException_) as well as special Sub-Document errors which are received when certain constraints are not satisfied.
 Some of the errors include:
 
 * *PathNotFoundException*: When retrieving a path, this means the path does not exist in the document.
@@ -434,8 +352,7 @@ For example:
 
 must be referenced as `literal\"quote.array`.
 
-If the path also has special path characters (i.e.
-a dot or brackets) it may be escaped using {sqlpp} escapes.
+If the path also has special path characters (i.e. a dot or brackets) it may be escaped using {sqlpp} escapes.
 Considering the document
 
 [source,json]
@@ -443,12 +360,10 @@ Considering the document
 {"literal[]bracket": {"literal.dot": true}}
 ----
 
-A path such as
- \`literal[]bracket`.\`literal.dot`.
+A path such as \`literal[]bracket`.\`literal.dot`.
 You can use double-backticks (pass:c[``]) to reference a literal backtick.
 
-If you need to combine both JSON _and_ path-syntax literals you can do so by escaping the component from any JSON string characters (e.g.
-a quote or backslash) and then encapsulating it in backticks (`pass:c[`path`]`).
+If you need to combine both JSON _and_ path-syntax literals you can do so by escaping the component from any JSON string characters (e.g. a quote or backslash) and then encapsulating it in backticks (`pass:c[`path`]`).
 
 NOTE: Currently, paths cannot exceed 1024 characters, and cannot be more than 32 levels deep.
 

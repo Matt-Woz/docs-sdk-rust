@@ -20,7 +20,6 @@
 // see .NET doc on this
 
 
-From batching and reactive APIs, to unit tests and handling errors.
 There's plenty that can be done to remove bottlenecks in development and in performance, and this page can be your checklist of areas not to neglect as you develop your app.
 
 
@@ -73,7 +72,7 @@ If you need pessimistic logging, in particular if you need to lock documents for
 
 
 
-=== Dealing with Timeout Errors
+=== Dealing with operations that timeout
 
 
 // see also
@@ -96,37 +95,9 @@ Advanced zone aware....
 ////
 
 
-=== Concurrency and Async APIs
-
-// ....this paragraph different for each SDK.
-
-Choosing between the blocking, asynchronous, and reactive APIs for the Scala SDK is partly bound up with how (and where) you want to handle exceptions.
-
-* Synchronous operations are blocking, and return a Scala `Try` object.
-This contains either the result or a _Throwable_ exception,
-which can be pattern matched over (using `flatMap` in more complex cases).
-* The asynchronous API returns Scala `Future`, representing the execution of an asynchronous task and the promise of a future result.
-An `ExecutionContext` must be provided, to give a thread pool for handling whatever is returned.
-* The reactive API is a more natural fit for network-aware, fault tolerant programs, 
-and will provide full back pressure for streaming results from large {sqlpp} or Search queries.
-
-See the xref:howtos:concurrent-async-apis.adoc[Async & Reactive APIs page] for further discussion and practical examples.
-
-
-
-== Error Handling
-
-Best practices for error handling in Scala depend somewhat upon your choice of API: 
-blocking, asynchronous, or reactive, as covered in the xref:concurrent-async-apis.adoc[async and reactive API guide].
-That guide also covers how errors are actually returned (e.g. via `Try`, `Future`, or `Mono`) and handled.
-See also the xref:howtos:error-handling.adoc[error handling guide],
-which covers specific errors, along with a broader look at error handling strategies.
-
-
 == Testing
 
 Integrate developing with the {name-sdk} into your accustomed test framework.
-
 
 
 
@@ -148,7 +119,7 @@ include::{version-common}@sdk:shared:partial$errors.adoc[tag=diag]
 
 
 // Slow Operations Logging
-include::{version-common}@sdk:shared:partial$errors.adoc[tag=observability]
+// include::{version-common}@sdk:shared:partial$errors.adoc[tag=observability]
 
 // until opentelemetry release for link below, could add note on API to expose own tracing features?
 // include::{version-common}@sdk:shared:partial$errors.adoc[tag=rto]

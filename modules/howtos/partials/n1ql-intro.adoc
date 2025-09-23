@@ -1,6 +1,6 @@
 // Required attributes:
-// :lang: Java
-// :version: 3.0.0 alpha
+// :lang: Rust
+// :version: 1.0.0
 [abstract]
 You can query for documents in Couchbase using the {sqlpp} query language (formerly N1QL), a language based on SQL, but designed for structured and flexible JSON documents.
 

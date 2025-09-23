@@ -31,13 +31,13 @@ include::{version-common}@sdk:shared:partial$documents.adoc[tag=document]
 
 == Primitive Key-Value Operations
 
-[source,python]
+[source,rust]
 ----
-upsert(docid, document)
-insert(docid, document)
-replace(docid, document)
-get(docid)
-remove(docid)
+collection.upsert(docid, document, opts);
+collection.insert(docid, document, opts);
+collection.replace(docid, document, opts);
+collection.get(docid, opts);
+collection.remove(docid, opts);
 ----
 
 include::{version-common}@sdk:shared:partial$documents.adoc[tag=crud-overview]
@@ -50,7 +50,7 @@ If you wish to only modify certain parts of a document, you can use xref:subdocu
 
 [source,scala]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=upsert,indent=0]
+include::devguide:example$src/subdocument.rs[tag=upsert,indent=0]
 ----
 
 or xref:{version-server}@server:n1ql:n1ql-language-reference/update.adoc[N1QL UPDATE] to update documents based on specific query criteria:
@@ -79,7 +79,7 @@ You can also retrieve _parts_ of documents using xref:subdocument-operations.ado
 
 [source,scala]
 ----
-include::devguide:example$scala/SubDocument.scala[tag=combine,indent=0]
+include::devguide:example$src/subdocument.rs[tag=combine,indent=0]
 ----
 
 // Counters
@@ -100,28 +100,16 @@ include::{version-common}@sdk:shared:partial$documents.adoc[tag=counters1]
 
 
 
-[source,java]
+[source,rust]
 ----
-//  java example:
-String counterDocId = "counter-doc";
-// Increment by 1, creating doc if needed
-collection.binary().increment(counterDocId);
-// Decrement by 1
-collection.binary().decrement(counterDocId);
-// Decrement by 5
-collection.binary().decrement(counterDocId,
-DecrementOptions.decrementOptions().delta(5));
+include::devguide:example$src/binary.rs[tag=counterexample,indent=0]
 ----
 
 include::{version-common}@sdk:shared:partial$documents.adoc[tag=counters2]
 
-[source,python]
+[source,rust]
 ----
-# Python example:
-rv = cb.get('counter_id')
-value, cas = rv.value, rv.cas
-if should_increment_value(value):
-  cb.upsert('counter_id', value + increment_amount, cas=cas)
+include::devguide:example$src/concurrency.rs[tag=counterwithcas,indent=0]
 ----
 
 include::{version-common}@sdk:shared:partial$documents.adoc[tag=counters3]

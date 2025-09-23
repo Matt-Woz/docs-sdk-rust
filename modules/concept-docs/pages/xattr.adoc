@@ -13,9 +13,9 @@ include::{version-common}@sdk:shared:partial$sdk-xattr-overview.adoc[tag=using_e
 
 include::{version-common}@sdk:shared:partial$sdk-xattr-overview.adoc[tag=virtual_extended_attributes]
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Examples.scala[tag=lookup,indent=0]
+include::devguide:example$src/subdocument.rs[tag=expiry,indent=0]
 ----
 
 // See the xref:howtos:sdk-xattr-example.adoc#virtual-extended-attributes-example[example page] for a complete code sample.

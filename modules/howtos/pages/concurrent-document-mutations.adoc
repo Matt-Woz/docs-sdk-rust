@@ -11,11 +11,10 @@ include::{version-common}@sdk:shared:partial$cas.adoc[tag=errors]
 
 [source,scala]
 ----
-include::devguide:example$scala/CAS.scala[tag=loop,indent=0]
+include::devguide:example$src/kv_operations.rs[tag=cas-loop,indent=0]
 ----
 
 Sometimes more logic is needed when performing updates, for example, if a property is mutually exclusive with another property; only one or the other can exist, but not both.
-
 
 include::{version-common}@sdk:shared:partial$cas.adoc[tag=performance]
 
@@ -25,8 +24,8 @@ include::{version-common}@sdk:shared:partial$cas.adoc[tag=locking]
 
 [source,scala]
 ----
-include::devguide:example$scala/CAS.scala[tag=locking,indent=0]
+include::devguide:example$src/kv_operations.rs[tag=locking,indent=0]
 ----
 
-If the item has already been locked, the server will respond with `CasMismatchException` which means that the operation could not be executed temporarily, but may succeed later on.
+If the item has already been locked, the server will respond with `CasMismatch` which means that the operation could not be executed temporarily, but may succeed later on.
 
