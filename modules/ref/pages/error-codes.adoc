@@ -2,7 +2,6 @@
 :description: The standardized error codes returned by the Couchbase Scala SDK, from cloud connection to sub-document.
 :page-toclevels: 2
 
-
 [abstract]
 {description}
 
@@ -12,34 +11,21 @@ include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=intro]
 
 include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=shared]
 
-
 == KeyValue Error Definitions
+
 include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=kv]
 
-
 == Query Error Definitions
+
 include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=query]
 
-
-== Analytics Error Definitions
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=analytics]
-
-
 == Search Error Definition
+
 include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=search]
 
-
-== View Error Definitions
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=views]
-
-
 == Management API Error Definitions
+
 include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=mgmnt]
-
-
-== Field-Level Encryption Error Definitions
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=fle]
-
 
 ////
 === SDK-Specific Error Definitions
@@ -52,6 +38,7 @@ This range is reserved for sdk-specific error codes which are not standardized, 
 
 
 == Connecting to Cloud
+
 include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=cloud]
 
 

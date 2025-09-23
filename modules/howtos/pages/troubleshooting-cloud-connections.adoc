@@ -4,22 +4,18 @@ include::{version-common}@sdk:pages:partial$troubleshooting-cloud-connections.ad
 
 // Additions to additional steps - scala-specific:
 
-* The SDK logging should give some indication as to what's failing. 
-  In particular, check if the DNS SRV lookup is successful. 
-  It will look something like:
+// * The SDK logging should give some indication as to what's failing.
+//   In particular, check if the DNS SRV lookup is successful.
+//   It will look something like:
+// +
+// ----
+// [ INFO] (cb-events) [com.couchbase.core][DnsSrvRecordsLoadedEvent][2086ms] Loaded seed hosts from DNS SRV: [cb-0000.<hostname>, cb-0001.<hostname>, cb-0002.<hostname>]
+// ----
+* You can determine if the certificate is the cause of the connection issues by *temporarily* disabling certificate validation with this alternative `TlsOptions` configuration:
 +
+[source,rust]
 ----
-[ INFO] (cb-events) [com.couchbase.core][DnsSrvRecordsLoadedEvent][2086ms] Loaded seed hosts from DNS SRV: [cb-0000.<hostname>, cb-0001.<hostname>, cb-0002.<hostname>]
-----
-* You can determine if the certificate is the cause of the connection issues by *temporarily* disabling certificate validation with this alternative `ClusterEnvironment` configuration:
-+
-[source,scala]
-----
-    val env: ClusterEnvironment = ClusterEnvironment.builder
-      .securityConfig(SecurityConfig()
-        .trustManagerFactory(InsecureTrustManagerFactory.INSTANCE))
-      .build
-      .get
+include::devguide:example$src/start_using.rs[tag=insecure-connection,indent=0]
 ----
 +
 _This is not a secure connection._

@@ -14,9 +14,6 @@
 [abstract]
 {description}
 
-
-
-
 ////
 * Couchbase Server 7.6 introduces Vector Search to enable AI integration, semantic search, and the RAG framework.
 A developer-friendly vector indexing engine exposes a vector database and search functionality.
@@ -42,23 +39,22 @@ Vector queries with GSI are fast and scale up, but sometimes you may wish to use
 Hybrid searches can combine Vector, geo-spatial search, range search, and traditional fuzzy text search for apps that...........
 ////
 
-
 This is currently implemented using xref:full-text-searching-with-sdk.adoc[Search Indexes], and can even be combined with traditional full text search queries.
 Vector embeddings can be an array of floats or a xref:server:vector-search:run-vector-search-ui.adoc#base64[base64 encoded string].
 
-
 == Prerequisites
 
-Couchbase Server 7.6.0
-(7.6.2 for base64-encoded vectors) -- or recent Capella instance.
+Couchbase Server 7.6.0 (7.6.2 for base64-encoded vectors) -- or recent Capella instance.
 
 // examples
 
-==== Single vector query
+== Single vector query
+
 In this first example we are performing a single vector query:
-[source,scala]
+
+[source,rust]
 ----
-include::devguide:example$scala/FTS.scala[tag=vector1,indent=0]
+include::devguide:example$src/search.rs[tag=vectorsearch,indent=0]
 ----
 
 Let's break this down.
@@ -78,27 +74,27 @@ If it was a global index we would use `cluster.search()` instead - see <<Scoped 
 
 It returns the same `SearchResult` detailed earlier.
 
-==== Multiple vector queries
+== Multiple vector queries
+
 You can run multiple vector queries together:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/FTS.scala[tag=vector3,indent=0]
+include::devguide:example$src/search.rs[tag=multiplevectors,indent=0]
 ----
 
-How the results are combined (ANDed or ORed) can be controlled with `vectorSearchOptions().vectorQueryCombination()`.
+How the results are combined (ANDed or ORed) can be controlled with `VectorSearchOptions().query_combination()`.
 
-==== Combining FTS and vector queries
+== Combining FTS and vector queries
+
 You can combine a traditional FTS query with vector queries:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/FTS.scala[tag=vector2,indent=0]
+include::devguide:example$src/search.rs[tag=combinesearchvector,indent=0]
 ----
 
-How the results are combined (ANDed or ORed) can be controlled with `vectorSearchOptions().vectorQueryCombination()`.
-
-
+How the results are combined (ANDed or ORed) can be controlled with `VectorSearchOptions().query_combination()`.
 
 ////
 ==== FTS queries
@@ -125,6 +121,6 @@ include::devguide:example$scala/FTS.scala[tag=vector4,indent=0]
 
 * xref:server:vector-search:vector-search.adoc[Vector Search for AI Apps docs (self-managed Couchbase Server)]
 * xref:cloud::vector-search:vector-search.adoc[Vector Search for AI Apps docs (Capella DBaaS)]
-* Vector Search in the https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/search/vector/index.html[Scala API reference].
+// * Vector Search in the https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/search/vector/index.html[Scala API reference].
 
 // https://developer.couchbase.com/tutorial-python-langchain-pdf-chat

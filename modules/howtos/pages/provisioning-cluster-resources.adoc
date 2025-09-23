@@ -4,66 +4,38 @@
 :page-toclevels: 2
 
 // API refs
-:bucket-api-reference: pass:q[BucketManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#buckets:com.couchbase.client.scala.manager.bucket.BucketManager[`Cluster.buckets`]]
-:user-api-reference: pass:q[UserManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#users:com.couchbase.client.scala.manager.user.UserManager[`Cluster.users`]]
-:query-api-reference: pass:q[QueryIndexManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#queryIndexes:com.couchbase.client.scala.manager.query.QueryIndexManager[`Cluster.queryIndexes`]]
-:analytics-api-reference: pass:q[AnalyticsIndexManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#analyticsIndexes:com.couchbase.client.scala.manager.analytics.AnalyticsIndexManager[`Cluster.analyticsIndexes`]]
-:search-api-reference: pass:q[SearchIndexManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#searchIndexes:com.couchbase.client.scala.manager.search.SearchIndexManager[`Cluster.searchIndexes`]]
-:collection-api-reference: pass:q[CollectionManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Bucket.html#collections:com.couchbase.client.scala.manager.collection.CollectionManager[`Bucket.collections`]]
-:view-api-reference: pass:q[ ViewIndexManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Bucket.html#viewIndexes:com.couchbase.client.scala.manager.view.ViewIndexManager[`Bucket.viewIndexes`]]
-
-// one-view-update-warning common partial
-:upsertDesignDocument: pass:q[`upsertDesignDocument` method]
-:getDesignDocument: pass:q[`getDesignDocument`]
-
+// :bucket-api-reference: pass:q[BucketManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#buckets:com.couchbase.client.scala.manager.bucket.BucketManager[`Cluster.buckets`]]
+// :user-api-reference: pass:q[UserManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#users:com.couchbase.client.scala.manager.user.UserManager[`Cluster.users`]]
+// :query-api-reference: pass:q[QueryIndexManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#queryIndexes:com.couchbase.client.scala.manager.query.QueryIndexManager[`Cluster.queryIndexes`]]
+// :search-api-reference: pass:q[SearchIndexManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Cluster.html#searchIndexes:com.couchbase.client.scala.manager.search.SearchIndexManager[`Cluster.searchIndexes`]]
+// :collection-api-reference: pass:q[CollectionManager -- https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/Bucket.html#collections:com.couchbase.client.scala.manager.collection.CollectionManager[`Bucket.collections`]]
 
 [abstract]
 {description}
-Common use cases are outlined here, less common use cases are covered in the https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/index.html[API docs].
+// Common use cases are outlined here, less common use cases are covered in the https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/index.html[API docs].
 
 include::{version-common}@sdk:shared:partial$flush-info-pars.adoc[tag=management-intro]
 
-The Scala SDK also comes with some convenience functionality for common Couchbase management requests.
+The {name-sdk} also comes with some convenience functionality for common Couchbase management requests.
 
-Management operations in the SDK may be performed through several interfaces depending on the object:
+// Management operations in the SDK may be performed through several interfaces.
 
-* {bucket-api-reference}
-* {user-api-reference} -- see the xref:sdk-user-management-example.adoc[User Management page]
-* {query-api-reference} 
-* {analytics-api-reference}
-* {search-api-reference}
-* {collection-api-reference}
-* {view-api-reference}
-
-NOTE: When using a Couchbase version earlier than 6.5, you must create a valid Bucket connection using `Cluster.bucket(name)` before you can use cluster-level managers.
+// * {bucket-api-reference}
+// * {user-api-reference} -- see the xref:sdk-user-management-example.adoc[User Management page]
+// * {query-api-reference}
+// * {analytics-api-reference}
+// * {search-api-reference}
+// * {collection-api-reference}
+// * {view-api-reference}
 
 == Bucket Management
 
 The `BucketManager` interface may be used to create and delete buckets from the Couchbase cluster.
 
-The `CreateBucketSettings` and `BucketSettings` classes are used for creating and updating buckets.
+`BucketSettings` is used for creating and updating buckets.
 `BucketSettings` is also used for exposing information about existing buckets.
 
 include::{version-common}@sdk:shared:partial$flush-info-pars.adoc[tag=update-bucket-warning]
-
-Here is the list of parameters available for `CreateBucketSettings` and `BucketSettings`.
-The "Updatable" column indicates whether the parameter may only be specified when creating a bucket, or whether it may be updated after creation.
-
-[cols="30,30,28,12"]
-|====
-| Name | Type | Description | Updatable
-
-| `name` | `String` | The name of the bucket, required for creation. | false
-| `flushEnabled` | `boolean` | Enables flushing to be performed on this bucket (see the <<Flushing Buckets>> section below). | true
-| `replicaIndexes` | `boolean` | Whether or not to replicate indexes. | false
-| `ramQuotaMB` | `int` | How much memory should each node use for the bucket, required for creation. | true
-| `numReplicas` | `int` | The number of replicas to use for the bucket. | true
-| `bucketType` | `BucketType` | The type of the bucket, required for creation. | false
-| `ejectionMethod` | `EjectionMethod` | The type of the ejection to use for the bucket, defaults to `ValueOnly`. | true (note: changing will cause the bucket to restart causing temporary inaccessibility)
-| `maxTTL` | `int` | The default maximum time-to-live to apply to documents in the bucket. (note: This option is only available for Couchbase and Ephemeral buckets in Couchbase Enterprise Edition.) | true
-| `compressionMode` | `CompressionMode` | The compression mode to apply to documents in the bucket. (note: This option is only available for Couchbase and Ephemeral buckets in Couchbase Enterprise Edition.) | true
-| `conflictResolutionType` | `ConflictResolutionType` | The conflict resolution type to apply to conflicts on the bucket, defaults to `SequenceNumber` | false
-|====
 
 The following example creates a "hello" bucket:
 
@@ -140,7 +112,7 @@ You can create users with the appropriate RBAC programmatically:
 
 [source,scala]
 ----
-include::devguide:example$scala/CollectionManagerExample.scala[tag=scopeAdmin, indent=0]
+include::devguide:example$scala/CollectionManagerExample.scala[tag=scopeAdmin,indent=0]
 ----
 
 
@@ -164,10 +136,9 @@ include::devguide:example$scala/QueryIndexManagerExample.scala[tag=creating-inde
 include::{version-common}@sdk:shared:partial$flush-info-pars.adoc[tag=query-index-manager-intro]
 
 The example below shows how to create a simple primary index, restricted to a named scope and collection, by calling the `createPrimaryIndex()` method.
-Note that you cannot provide a named scope or collection separately, both must be set for the `QueryIndexManager` to create an index on the relevant keyspace path. 
+Note that you cannot provide a named scope or collection separately, both must be set for the `QueryIndexManager` to create an index on the relevant keyspace path.
 
 .Creating a primary index
-
 [source,scala]
 ----
 include::devguide:example$scala/QueryIndexManagerExample.scala[tag=primary,indent=0]
@@ -176,13 +147,12 @@ include::devguide:example$scala/QueryIndexManagerExample.scala[tag=primary,inden
 When a primary index name is not specified, the SDK will create the index as `#primary` by default.
 However, if you wish to provide a custom name, you can simply pass an `indexName` argument to `createPrimaryIndex()`.
 
-You may have noticed that the example also sets the `ignoreIfExists` boolean flag. 
+You may have noticed that the example also sets the `ignoreIfExists` boolean flag.
 When set to `true`, this optional argument ensures that an error is not thrown if an index under the same name already exists.
 
 Creating a _secondary_ index follows a similar approach, with some minor differences:
 
 .Creating a secondary index
-
 [source,scala]
 ----
 include::devguide:example$scala/QueryIndexManagerExample.scala[tag=secondary,indent=0]
@@ -196,17 +166,15 @@ In these situations, it is more ideal to build indexes in the background.
 To achieve this we can use the `deferred` boolean option, and set it to `true`.
 
 .Deferring index creation
-
 [source,scala]
 ----
 include::devguide:example$scala/QueryIndexManagerExample.scala[tag=defer-indexes,indent=0]
 ----
 
-To delete a query index you can use the `dropIndex()` or `dropPrimaryIndex()` methods. 
+To delete a query index you can use the `dropIndex()` or `dropPrimaryIndex()` methods.
 Which one you use depends on the type of query index you wish to drop from the cluster.
 
 .Deleting an index
-
 [source,scala]
 ----
 include::devguide:example$scala/QueryIndexManagerExample.scala[tag=drop-primary-or-secondary-index,indent=0]

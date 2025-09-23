@@ -26,21 +26,18 @@ xref:project-docs:sdk-release-notes.adoc[] |
 {sdk-api-link}[{name-sdk} API Reference] |
 {sdk-gh-link}[{name-sdk} SDK source code]
 
-
-
 What's the point of a fast and scalable database if it's not easy to develop for?
 Couchbase gives you the {name_platform} APIs to work with Capella, our managed solution, or self-managed options in your private Cloud or datacenter.
 
-
-[{tabs}] 
-==== 
+[{tabs}]
+====
 Data Ops (CRUD)::
 +
 --
 
 [source,rust]
 ----
-include::devguide:example$rust/KvOperations.rs[indent=0,tag=upsert]
+include::devguide:example$src/kv_operations.rs[indent=0,tag=upsert]
 ----
 --
 
@@ -50,7 +47,7 @@ include::devguide:example$rust/KvOperations.rs[indent=0,tag=upsert]
 
 [source,rust]
 ----
-include::devguide:example$rust/Queries.rs[tag=simple,indent=0]
+include::devguide:example$src/queries.rs[indent=0,tag=simple]
 ----
 --
 
@@ -60,27 +57,19 @@ Vector Search::
 
 [source,rust]
 ----
-include::devguide:example$rust/FTS.rs[tag=vector1,indent=0]
+include::devguide:example$src/search.rs[indent=0,tag=vectorsearch]
 ----
 --
 ====
 
-
-Couchbase is a large platform -- covering many services -- and Couchbase SDKs are not thin wrappers generated around a REST API, but well thought out interfaces to the platform that make it easier to design and maintain your client code,
-and work with Couchbase in more natural ways for your platform.
+Couchbase is a large platform -- covering many services -- and Couchbase SDKs are not thin wrappers generated around a REST API, but well thought out interfaces to the platform that make it easier to design and maintain your client code, and work with Couchbase in more natural ways for your platform.
 Install the SDK, and explore in the way that works best for you.
 
-.Installing the SDK via Rust Build Tool
-[source,sbt,subs="normal, attributes"]
+.Installing the SDK via Rust Cargo
+[source]
 ----
-libraryDependencies += "com.couchbase.client" %% "rust-client" % "{sdk_current_version}"
+cargo add couchbase
 ----
-
-The Rust SDK is provided with builds for Rust 2.12, 2.13, and 3.
-`%%` takes care of selecting the right version in Rust Build Tool.
-If you are using another build tool such as Maven or Gradle, then specify `rust-client_2.12`, `rust-client_2.13`, or `rust-client_3`, as appropriate.
-The Rust 3 build can be used from applications compiled with Rust 3.3 through 3.7 inclusive, and even Rust 2.13.
-It is the recommended build for all users, except those on 2.12.
 
 The links below will take you where you want to go -- as will the navigation on the left-hand side of this page.
 But if you don't know exactly where you need to go, try one of the following:
@@ -89,7 +78,6 @@ But if you don't know exactly where you need to go, try one of the following:
 * Couchbase's familiar SQL-family query language and fuzzy search options (including vector search) are introduced on the xref:concept-docs:querying-your-data.adoc[] page.
 * The {name-sdk} docs are, necessarily, just a sub-set {sdk-api-link}[{name-sdk} API Reference] -- and a complete reference of all APIs can be found there.
 * For a fuller orientation, there is a xref:project-docs:metadoc-about-these-sdk-docs.adoc[guide to the {name-sdk} docs]
-
 
 {empty} +
 
@@ -113,7 +101,6 @@ How-to guides to help you start your development journey with Couchbase and the 
 * xref:howtos:sqlpp-queries-with-sdk.adoc[Query with a familiar, SQL-like language]
 * xref:howtos:vector-searching-with-sdk.adoc[Vector Search for your AI app]
 * xref:howtos:full-text-searching-with-sdk.adoc[Fuzzy Search with text and Geo data]
-* xref:howtos:analytics-using-sdk.adoc[OLAP -- long running analytical queries]
 
 // For Real-Time Analytics, see our xref:[Capella Columnar SDKs].
 
@@ -121,14 +108,11 @@ How-to guides to help you start your development journey with Couchbase and the 
 .Lightning Fast Data Service
 * xref:howtos:kv-operations.adoc[]
 * xref:howtos:subdocument-operations.adoc[]
-* xref:howtos:encrypting-using-sdk.adoc[]
-* xref:howtos:distributed-acid-transactions-from-the-sdk.adoc[Multi-Document Distributed ACID Transactions]
 
 [.column]
 .Observability & Error Handling
 * xref:howtos:error-handling.adoc[]
 * xref:howtos:collecting-information-and-logging.adoc[]
-* xref:howtos:slow-operations-logging.adoc[]
 * xref:howtos:health-check.adoc[]
 
 ++++

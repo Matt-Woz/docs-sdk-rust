@@ -6,13 +6,13 @@
 :page-partial:
 
 // Note to editors
-// 
+//
 // This page pulls in content from
 // https://github.com/couchbase/docs-sdk-common/blob/release/7.6/modules/shared/partials/start-using-sdk.adoc
 //
 // and code samples from
 // https://github.com/couchbase/docs-sdk-scala/tree/release/1.7/modules/devguide/examples/scala
-// 
+//
 // It can be seen built at
 // https://docs.couchbase.com/scala-sdk/1.7/hello-world/start-using-sdk.html
 
@@ -20,43 +20,35 @@
 [abstract]
 {description}
 
-
-
-Couchbase has a simple interface for creating and modifying records in a document, 
-based upon the *collection* into which the documents are organized.
-You can read more about data modeling <<data-modeling,below>>, 
-but first let's look at those data operations, and installing the {name-sdk}.
+Couchbase has a simple interface for creating and modifying records in a document, based upon the *collection* into which the documents are organized.
+You can read more about data modeling <<data-modeling,below>>, but first let's look at those data operations, and installing the {name-sdk}.
 
 // remember to add a nomenclature note to the next version of this page for LCB.
 
 .Upsert with a Unique ID
 [source,scala]
 ----
-include::devguide:example$scala/Cloud.scala[tag=upsert,indent=0]
+include::devguide:example$src/subdocument.rs[tag=upsert,indent=0]
 ----
 
 `upsert` inserts (creates) the document if it does not exist, or replaces it if it does.
 We'll explore creating and retrieving data records in more detail <<create-read-update-delete,below>>
-(and touch lightly upon a little of Scala's functional programming approach as we go), 
-after walking through a quick installation.
-
+(and touch lightly upon a little of Rust's functional programming approach as we go), after walking through a quick installation.
 
 == Before You Start
 
 Couchbase Capella, our Database-as-a-Service, lets you get on with what matters, while we take care of the administration for you.
-Alternately, if you need to control every aspect of deployment -- 
-or just want to run the Server in a VM on your laptop -- 
+Alternately, if you need to control every aspect of deployment --
+or just want to run the Server in a VM on your laptop --
 there are several self-managed options available:
 
 [tabs]
-==== 
+====
 Couchbase Capella::
 +
 --
-If you haven't already got a cluster set up, the easiest route is to https://cloud.couchbase.com/sign-up[sign up to Couchbase Capella and deploy a free tier cluster^], 
-then come back to this page.
-Make a note of the xref:cloud:get-started:connect.adoc[endpoint] to connect to, 
-and remember the credentials for the user that you set up.
+If you haven't already got a cluster set up, the easiest route is to https://cloud.couchbase.com/sign-up[sign up to Couchbase Capella and deploy a free tier cluster^], then come back to this page.
+Make a note of the xref:cloud:get-started:connect.adoc[endpoint] to connect to, and remember the credentials for the user that you set up.
 --
 
 Self-Managed Couchbase Server::
@@ -84,9 +76,8 @@ For the example code below to run, you'll need the username and password of the 
 
 === Prerequisites
 
-* The Scala SDK is tested against LTS versions of Oracle JDK and OpenJDK -- 
-see the xref:project-docs:compatibility.adoc#jdk-compat[compatibility docs].
-* The Couchbase {name-sdk} {sdk_dot_minor} Client supports Scala 2.12 and 2.13.
+* The Rust SDK supports Rust Edition 2024 and later.
+* The Couchbase {name-sdk} {sdk_dot_minor} Client is tested against Rust 1.90.
 
 The code examples also assume:
 
@@ -124,69 +115,23 @@ In production, Couchbase strongly recommends setting up users with more granular
 --
 ====
 
-
 == Installation
 
 // tag::quick-install[]
-More details of the installation process are in the 
+More details of the installation process are in the
 xref:project-docs:sdk-full-installation.adoc[full installation guide].
-In most cases, given the above prerequisites, it's a simple matter of the following for your favorite build tool:
+In most cases, given the above prerequisites, it's a simple matter of the following:
 
-[tabs] 
-==== 
-Scala Build Tool (SBT)::
-+
---
-[source,sbt,subs="+attributes"]
+[source]
 ----
-libraryDependencies += "com.couchbase.client" %% "scala-client" % "{sdk_current_version}"
+cargo add couchbase
 ----
-
-This will automatically use the Scala 2.12 or 2.13 builds, as appropriate for your SBT project.
---
-
-Gradle::
-+
---
-For Scala 2.13, include the following in your `build.gradle`:
-
-[source,groovy,subs="+attributes"]
-----
-dependencies {
-    compile group: 'com.couchbase.client', name: 'scala-client_2.13', version: '{sdk_current_version}'
-}
-----
-
-For Scala 2.12, refer to the full xref:project-docs:sdk-full-installation.adoc[Installation page].
---
-
-Maven::
-+
---
-For Scala 2.13, include the following in your Maven `pom.xml`:
-
-[source,xml,subs="+attributes"]
-----
-<dependencies>
-    <dependency>
-        <groupId>com.couchbase.client</groupId>
-        <artifactId>scala-client_2.13</artifactId>
-        <version>{sdk_current_version}</version>
-    </dependency>
-</dependencies>
-----
-
-For Scala 2.12, refer to the full xref:project-docs:sdk-full-installation.adoc[Installation page].
---
-====
 // end::quick-install[]
 
 === IDE Plugins
 
 To make development easier, Couchbase plugins are available for VSCode and the IntelliJ family of IDEs and editors.
-For links and more information on these and other integrations across the {name_platform} ecosystem, 
-check out the xref:project-docs:third-party-integrations.adoc[] page.
-
+For links and more information on these and other integrations across the {name_platform} ecosystem, check out the xref:project-docs:third-party-integrations.adoc[] page.
 
 === Grab the Code
 
@@ -196,7 +141,7 @@ If you're all set up and in a real hurry, just grab this code sample and add in 
 [%collapsible]
 ====
 ....
-include::devguide:example$scala/Cloud.scala[]
+include::devguide:example$src/capella_sample.rs[]
 ....
 ====
 
@@ -204,100 +149,75 @@ Otherwise, read on as we introduce the CRUD API and connection to Capella or sel
 
 TIP: There's a *View* link to the complete sample code on GitHub above each of the snippets on these SDK pages, and a *Copy* icon to grab just the snippet shown.
 
-
 == Connect to your Database
 
 Connect to your Couchbase Capella operational cluster (or your local Couchbase Cluster, if you are trying out self-managed Couchbase).
 
-
 [tabs,sync-group-id="Couchbase Capella|Self-Managed Couchbase Server"]
-==== 
+====
 Couchbase Capella::
 +
 --
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Cloud.scala[tag=connect,indent=0]
+include::devguide:example$src/capella_sample.rs[tag=connect,indent=0]
 ----
 
 Note, the client certificate for connecting to a Capella cluster is included in the SDK installation.
 --
 
 Self-Managed Couchbase Server::
-+ 
--- 
-[source,scala]
-----
-include::devguide:example$scala/StartUsing.scala[tag=connect,indent=0]
-----
---
-
-Cloud Native Gateway (CNG)::
 +
 --
-Couchbase's large number of ports across the URLs of many services can be proxied by using a `couchbase2://` endpoint as the connection string --
-currently only compatible with recent versions of xref:operator:ROOT:concept-cloud-native-gateway.adoc[Couchbase Autonomous Operator]:
-
-[source,scala]
+[source,rust]
 ----
-.connect(
-  "couchbase2://10.12.14.16",
-  ClusterOptions
-    .create(username, password)
-    .environment(env)
-)
+include::devguide:example$src/start_using.rs[tag=connect,indent=0]
 ----
-
-Read more on the xref:howtos:managing-connections.adoc#cloud-native-gateway[Connections] page.
-
 --
 ====
 
-
-The `ClusterEnvironment.builder` is covered more fully on the xref:ref:client-settings.adoc#the-environment-builder[Client Settings] page.
-
-
-NOTE: `Cluster.connect` returns a `Try[Cluster]`, as the Scala client uses functional error handling and does not throw exceptions.
-You'll see examples later of how to better handle a `Try`, but for simplicity here we'll assume the operation succeeded and get the result as a `Cluster` using `.get`.
+NOTE: `Cluster.connect` returns a `Result<Cluster, Error>`.
+You'll see examples later of how to better handle a `Result`, but for simplicity here we'll assume the operation succeeded and get the result as a `Cluster` using `.unwrap`.
 
 For a deeper look at connection options, read xref:howtos:managing-connections.adoc[].
 
 TIP: The connection code for getting started uses the Administrator password that you were given during set up.
-In any production app you should create a role restricted to the permissions needed for your app -- 
+In any production app you should create a role restricted to the permissions needed for your app --
 more on this in xref:concept-docs:best-practices.adoc#roles-and-rbac[the Security documentation].
+
+=== Timeouts
+
+Operations in the {name-sdk} do not support timeouts in order to feel idiomatic to the Rust ecosystem.
+In the examples you will see that we use a `timeout` function, which is basic wrapper around `tokio::time::timeout`.
+To cancel an operation, be it from a timeout or any other reason, you can just drop the future that was returned and the SDK will internally release relevant resources.
 
 === Opening a Bucket
 
 Following successful authentication, open the bucket with:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Cloud.scala[tag=bucket,indent=0]
+include::devguide:example$src/capella_sample.rs[tag=bucket,indent=0]
 ----
-
-
 
 ////
 client has not yet completed bootstrapping (connecting to the cluster, getting the configuration, connecting to the nodes).
 ////
 
-
-`waitUntilReady` is an optional call,
-but it is good practice to use it.
+`waitUntilReady` is an optional call, but it is good practice to use it.
 Opening resources such as buckets is asynchronous --
 that is, the `cluster.bucket` call returns immediately and proceeds in the background.
 `waitUntilReady` ensures that the bucket resource is fully loaded before proceeding.
 If not present, then the first key-value (KV) operation on the bucket will wait for it to be ready.
-As with the earlier `Cluster.connect`, we use `.get` on the result here for simplicity.
+As with the earlier `Cluster.connect`, we use `.unwrap` on the result here for simplicity.
 
 *Collections* allow documents to be grouped by purpose or theme, according to a specified *scope* -- see data modeling, <<data-modeling,below>>.
 Here we will use the `airport` collection within the `inventory` scope from `travel-sample` bucket as an example.
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Cloud.scala[tag=collection,indent=0]
+include::devguide:example$src/capella_sample.rs[tag=collection,indent=0]
 ----
-
 
 == Create, Read, Update, Delete
 
@@ -306,13 +226,12 @@ https://en.wikipedia.org/wiki/CRUD[CRUD operations^] -- Create, Read, Update, De
 
 === JSON
 
-We'll create a snippet of JSON to work with, using the client's own JSON library,
-but you can read about the Scala SDK's support for other JSON libraries on the
-xref:howtos:json.adoc[] page.
+We'll create a snippet of JSON to work with, using the `serde_json` JSON library, but you can use any library that can serialize to `serde::Serialize`.
+You can also use any value that is already serialized into a `Vec<u8>` using the `<operation_namne>_raw` set of functions.
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Cloud.scala[tag=json,indent=0]
+include::devguide:example$src/capella_sample.rs[tag=json,indent=0]
 ----
 
 === Insert (Create) and Upsert
@@ -325,9 +244,9 @@ while the `upsert` operation will succeed, replacing the content.
 We need to provide a unique ID as the key, and we'll use a UUID here:
 
 .Creating a new document
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Cloud.scala[tag=upsert,indent=0]
+include::devguide:example$src/capella_sample.rs[tag=upsert,indent=0]
 ----
 
 === Get (Read)
@@ -335,66 +254,41 @@ include::devguide:example$scala/Cloud.scala[tag=upsert,indent=0]
 The `get` method reads a document from a collection.
 // If the collection does not have a document with this ID, the `get` method also throws `DocumentNotFoundException`.
 
-As mentioned above, the Scala SDK will not throw exceptions.
-Instead, methods that can error -- such as the `upsert` above --
-will return a Scala `Try` result, which can either be a `Success` containing the result, or a `Failure` containing a _Throwable_ exception.
-The easiest way to handle a single operation is with pattern matching, as shown above.
+Now let's get the data back (this example does not follow best practices due to the use of `.unwrap`):
 
-Now let's get the data back (this example will look a little messy due the nested handling of multiple `Try` results, but we'll see how to clean it up shortly):
-
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Cloud.scala[tag=get,indent=0]
+include::devguide:example$src/capella_sample.rs[tag=get,indent=0]
 ----
 
-Here we're fetching the value for the key `docId`,
-converting that value to a `JsonObjectSafe`
-(a simple wrapper around `JsonObject` that returns `Try` results -- see
-xref:howtos:json.adoc#error-handling-and-jsonobjectsafe[JsonObjectSafe] for details),
-and then accessing the value of the *status* key as a String.
+Here we're fetching the value for the key `docId`, converting that value to a `serde_json::Value` (a generic JSON object), , and then accessing the value of the *status* key as a String.
 
 ==== Better Error Handling
 
-All three of these operations could fail, so there's quite a lot of error handling code here to do something quite simple.
-One way to improve on this is by using `flatMap`, like this:
+There's quite a lot of error handling code here to do something quite simple - both `get` and `content_as` can return an error.
+One way to handle this better is to use the `?` operator to propagate errors up to the caller, like this:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Cloud.scala[tag=get-map,indent=0]
-----
-
-Alternatively, you can use a for-comprehension, like so:
-
-[source,scala]
-----
-include::devguide:example$scala/Cloud.scala[tag=get-for,indent=0]
+include::devguide:example$src/capella_sample.rs[tag=get-better-error-handling-propagate,indent=0]
 ----
 
-Either of these methods will stop on the first failed operation.  So the final returned `Try` contains either 
-a) `Success` and the result of the final operation, indicating that everything was successful, or 
-b) `Failure` with the error returned by the first failing operation.
+Another way to improve on this is by using `and_then`, like this:
+
+[source,rust]
+----
+include::devguide:example$src/capella_sample.rs[tag=get-better-error-handling,indent=0]
+----
 
 === Replace (Update) and Overloads
 
-You'll notice that most operations in the Scala SDK have two overloads.
-One will take an Options builder, which provides all possible options that operation takes.
+You'll notice that most operations in the {name-sdk} have an `Options` parameter.
 For instance:
 
 .The replace method updates the value of an existing document
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/Cloud.scala[tag=replace-options,indent=0]
-----
-
-These options blocks are implemented as Scala case classes:
-they are immutable data objects that return a copy of themselves on each change.
-
-The other overload is provided purely for convenience.
-It takes named arguments instead of an Options object, and provides only the most commonly used options:
-
-[source,scala]
-----
-include::devguide:example$scala/Cloud.scala[tag=replace-named,indent=0]
+include::devguide:example$src/capella_sample.rs[tag=replace-options,indent=0]
 ----
 
 CAUTION: When you replace a document, it's usually good practice to use xref:howtos:kv-operations.adoc#optimistic-locking[optimistic locking].
@@ -404,29 +298,25 @@ Otherwise, changes might get lost if two people change the same document at the 
 
 The remove method deletes a document from a collection:
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/KvOperations.scala[indent=0,tag=remove]
+include::devguide:example$src/kv_operations.rs[tag=remove,indent=0]
 ----
-
 
 == Data Modeling
 
 Documents are organized into collections -- collections of documents that belong together.
-You get to decide what it means to "belong." 
-Developers usually put documents of the same type in the same collection.
+You get to decide what it means to "belong." Developers usually put documents of the same type in the same collection.
 
-For example, imagine you have two types of documents: customers and invoices. 
+For example, imagine you have two types of documents: customers and invoices.
 You could put the customer documents in a collection called `customers`, and the invoice documents in a collection called `invoices`.
 
-Each document belongs to exactly one collection. 
+Each document belongs to exactly one collection.
 A document's ID is unique _within_ the collection.
 
-Different scopes can hold collections with different names. 
+Different scopes can hold collections with different names.
 There is no relationship between collections in different scopes.
-Each collection belongs to just one scope and
-a collection's name is unique within the scope.
-
+Each collection belongs to just one scope and a collection's name is unique within the scope.
 
 More details can be found on the xref:concept-docs:data-model.adoc[Data Model page].
 // The xref:student-record-developer-tutorial.adoc[Student Records Tutorial] gives an introduction to data modeling in a document database alongside using the {name-sdk}.
@@ -453,10 +343,8 @@ both
 === Next Steps
 
 // * Take a look at the xref:hello-world:sample-application.adoc[].
-* xref:concept-docs:data-durability-acid-transactions.adoc[Learn more about the Data Service].
 * xref:concept-docs:querying-your-data.adoc[Discover SQL++] -- our SQL-family querying language.
 * Explore some of the xref:project-docs:third-party-integrations.adoc[third party integrations] with Couchbase and the {name_platform} SDK, across the {name_platform} ecosystem.
-
 
 ////
 == Next Steps
@@ -472,7 +360,7 @@ Now you're up and running, try one of the following:
 
 === Additional Resources
 
-The Scala SDK includes three APIs.  
+The Scala SDK includes three APIs.
 The examples above show the simple blocking API, for simplicity, but you can also perform all operations in an async style using Scala `Future`, and a reactive style using Project Reactor `SMono` and `SFlux`.
 Please see xref:howtos:concurrent-async-apis.adoc[Choosing an API] for more details.
 

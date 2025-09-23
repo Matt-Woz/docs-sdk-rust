@@ -7,8 +7,8 @@
 
 == Contributing
 
-Couchbase welcomes community contributions to the Scala SDK.
-The https://github.com/couchbase/couchbase-jvm-clients/tree/master/scala-client[Scala SDK source code^] is available on GitHub.
-Please see the https://github.com/couchbase/couchbase-jvm-clients/blob/master/README.md[README^] file for further information.
+Couchbase welcomes community contributions to the {name-sdk}.
+The https://github.com/couchbase/couchbase-rs/tree/main/sdk/couchbase[{name-sdk} source code^] is available on GitHub.
+Please see the https://github.com/couchbase/couchbase-rs/blob/main/README.md[README^] file for further information.
 
 include::{version-common}@sdk:shared:partial$contrib.adoc[tag=contrib]
