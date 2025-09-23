@@ -29,10 +29,14 @@ Here is a simple upsert operation, which will insert the document if it does not
 include::devguide:example$src/kv_operations.rs[indent=0,tag=upsert]
 ----
 
-== Handling Single Errors
+// == Handling Single Errors
 
 [NOTE]
+.Handling Single Errors
+====
 We will use `println` to simply print any errors in these samples, but the application will of course want to perform better error handling.
+====
+
 
 == Insert
 
