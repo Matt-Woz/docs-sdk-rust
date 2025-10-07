@@ -7,17 +7,14 @@
 [abstract]
 {description}
 
-
 This page gives full installation instructions for the {name-sdk}.
 In most cases, the xref:hello-world:start-using-sdk.adoc[Quickstart Guide] should be enough to get you up and running if you're in a hurry.
-
 
 == Prerequisites
 
 The {name-sdk} is tested against LTS versions of Oracle JDK and OpenJDK -- see our xref:project-docs:compatibility.adoc#jdk-compat[compatibility docs].
 
-The Couchbase {name-sdk} 1.0 Client supports Rust 1.90+ and Edition 2024.
-
+The Couchbase {name-sdk} 1.0 Client supports Rust 1.90+.
 
 == Installing the SDK
 

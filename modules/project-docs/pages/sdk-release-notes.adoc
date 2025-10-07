@@ -13,7 +13,7 @@ See the xref:compatibility.adoc#couchbase-feature-availability-matrix[compatibil
 
 == Installation
 
-* The Couchbase {name-sdk} {sdk_dot_minor} Client supports Rust 1.90+ and Edition 2024.
+* The Couchbase {name-sdk} {sdk_dot_minor} Client supports Rust 1.90+.
 
 include::hello-world:start-using-sdk.adoc[tag=quick-install]
 
