@@ -22,15 +22,11 @@ include::{version-common}@sdk:shared:partial$cas.adoc[tag=format]
 
 
 
-
-// pessimistic locking example needed
-////
 include::{version-common}@sdk:shared:partial$cas.adoc[tag=locking]
 
-[source,scala]
+[source,rust]
 ----
 include::devguide:example$src/kv_operations.rs[tag=locking,indent=0]
 ----
 
 If the item has already been locked, the server will respond with `CasMismatch` which means that the operation could not be executed temporarily, but may succeed later on.
-////
