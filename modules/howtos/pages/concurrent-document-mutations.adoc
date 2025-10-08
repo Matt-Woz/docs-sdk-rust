@@ -9,22 +9,9 @@ include::{version-common}@sdk:shared:partial$cas.adoc[tag=example]
 
 include::{version-common}@sdk:shared:partial$cas.adoc[tag=errors]
 
-// will reusing this do for now?
 [source,rust]
 ----
-  mutateResult match {
-    // Succeeded, we're done
-    case Success(_) => mutateResult
-
-    // Failed on CAS
-    case Failure(err: CasMismatchException) =>
-      if (guard > 0) casLoop(collection, docId, guard - 1)
-      else mutateResult
-
-    // Something else went wrong, fast-fail
-    case Failure(err) => mutateResult
-  }
-}
+include::devguide:example$src/kv_operations.rs[tag=cas-loop,indent=0] 
 ----
 
 Sometimes more logic is needed when performing updates, for example, if a property is mutually exclusive with another property; only one or the other can exist, but not both.
