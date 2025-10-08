@@ -81,7 +81,7 @@ Finally, if the conversion to a `Value` was successful, we try to get the "statu
 == Replace
 
 A very common operation is to `get` a document, modify its contents, and `replace` it.
-Let's use a for-comprehension:
+
 
 [source,rust]
 ----
@@ -158,11 +158,11 @@ The options differ depend on what Couchbase Server version is in use.
 If 6.5 or above is being used, you can take advantage of the xref:concept-docs:durability-replication-failure-considerations.adoc#durable-writes[Durable Write] feature, in which Couchbase Server will only return success to the SDK after the requested replication level has been achieved.
 The three replication levels are:
 
-`Majority` -- The server will ensure that the change is available in memory on the majority of configured replicas.
+`MAJORITY` -- The server will ensure that the change is available in memory on the majority of configured replicas.
 
-`MajorityAndPersistToActive` -- Majority level, plus persisted to disk on the active node.
+`MAJORITY_AND_PERSIST_TO_MAJORITY` -- Majority level, plus persisted to disk on the active node.
 
-`PersistToMajority` -- Majority level, plus persisted to disk on the majority of configured replicas.
+`PERSIST_TO_MAJORITY` -- Majority level, plus persisted to disk on the majority of configured replicas.
 
 The options are in increasing levels of failure-resistance.
 Note that nothing comes for free -- for a given node, waiting for writes to storage is considerably slower than waiting for it to be available in-memory.

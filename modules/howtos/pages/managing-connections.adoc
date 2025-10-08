@@ -16,7 +16,7 @@
 {description}
 It contains best practices as well as information on TLS/SSL and advanced connection options, and a sub-page on troubleshooting Cloud connections.
 
-Our xref:hello-world:start-using-sdk[Getting Started pages] cover the basics of making a connection to a Capella or self-managed Couchbase cluster.
+Our xref:hello-world:start-using-sdk.adoc[Getting Started pages] cover the basics of making a connection to a Capella or self-managed Couchbase cluster.
 This page is a wider look at the topic.
 
 == Connecting to a Cluster
@@ -103,8 +103,7 @@ nodeA.example.com,nodeB.example.com
 127.0.0.1?io.networkResolution=external&timeout.kvTimeout=10s
 ----
 
-The full list of recognized parameters is documented in the client settings reference.
-Any client setting with a system property name may also be specified as a connection string parameter (without the `com.couchbase.env.` prefix).
+The full list of recognized parameters is documented in the xref:ref:client-settings.adoc[client settings] reference.
 
 === Connection Lifecycle
 
@@ -173,13 +172,10 @@ F4+FjEqAEIr1mQepDaNM0gEfVcgd2SzGhC3yhYFBAH//8W4DUot5ciEhoBs=
 
 The next step is to enable encryption and pass it the path to the certificate file.
 
-[source,scala]
+[source,rust]
 ----
-include::devguide:example$scala/ManagingConnections.scala[tag=secure,indent=0]
+include::devguide:example$src/start_using.rs[tag=secure-connection,indent=0]
 ----
-
-Then use this custom `ClusterEnvironment` when opening the connection to the cluster.
-See <<cluster-environment>> for an example of creating a `Cluster` with a custom environment.
 
 If you want to verify it's actually working, you can use a tool like [.cmd]`tcpdump`.
 For example, an unencrypted upsert request looks like this (using `sudo tcpdump -i lo0 -A -s 0 port 11210`):
@@ -199,16 +195,7 @@ E.....@.@.............+....Z.'yZ..#........
 --
 ====
 
-The SDK includes the certificate for Capella.
-// , but you may wish to
-// [use your own certificate], 
-// or be
-If you are working with a self-managed Couchbase cluster, add the certificate with:
 
-[source,rust]
-----
-include::devguide:example$src/start_using.rs[tag=secure-connection,indent=0]
-----
 
 == Alternate Addresses and Custom Ports
 
@@ -240,14 +227,18 @@ NOTE: Any TLS certificates must be set up at the point where the connections are
 include::{version-common}@sdk:shared:partial$dnssrv-pars.adoc[tag=dnssrv-rev]
 
 DNS SRV bootstrapping is enabled by default in the {name-sdk}.
-In order to make the SDK use the SRV records, you need to pass in the hostname from your records (here `example.com`):
+In order to make the SDK use the SRV records, you need to pass in the hostname or host address from your records (here `1.1.1.1`), and can also pass in a timeout value:
 
-////
-[source,scala]
+
+[source,rust]
 ----
-include::devguide:example$scala/ManagingConnections.scala[tag=dnssrv,indent=0]
+let socket = "1.1.1.1:53".parse().unwrap();
+opts = opts.dns_options(DnsOptions::new(socket).timeout(Duration::from_secs(1)));
 ----
-////
+
+CAUTION: In the developer preview of the SDK, this feature is not part of the stable xref:project-docs:compatibility.adoc#interface-stability[Committed] API.
+To enable it requires use of the `unstable-dns-options` --
+see the API reference for further information.
 
 If the DNS SRV records could not be loaded properly you'll get an error logged and the given host name will be used as a A record lookup.
 Also, if you pass in more than one node, DNS SRV bootstrap will not be initiated:
@@ -257,6 +248,8 @@ Also, if you pass in more than one node, DNS SRV bootstrap will not be initiated
 
 include::{version-common}@sdk:shared:partial$managing-connections.adoc[tag=cloud]
 
+
 == Next Steps
 
-* xref:secure-connections.adoc[Certificate Authentication] 
+* xref:sdk-authentication.adoc#certificate-authentication[Certificate Authentication] 
+

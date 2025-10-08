@@ -16,7 +16,7 @@ include::{version-common}@sdk:shared:partial$n1ql-queries.adoc[tag=prepared]
 
 For the Rust SDK, the `adhoc` parameter should be set to `false` for a plan to be prepared, or a prepared plan to be reused.
 
-[source,scala]
+[source,rust]
 ----
 include::devguide:example$src/queries.rs[tag=adhocquery,indent=0]
 ----

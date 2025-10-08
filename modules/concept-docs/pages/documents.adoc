@@ -48,7 +48,7 @@ include::{version-common}@sdk:shared:partial$documents.adoc[tag=store-update]
 ====
 If you wish to only modify certain parts of a document, you can use xref:subdocument-operations.adoc[Sub-Document] operations which operate on specific subsets of documents:
 
-[source,scala]
+[source,rust]
 ----
 include::devguide:example$src/subdocument.rs[tag=upsert,indent=0]
 ----
@@ -77,7 +77,7 @@ SELECT * FROM default WHERE META(default).id = "docid";
 
 You can also retrieve _parts_ of documents using xref:subdocument-operations.adoc[Sub-Document operations], by specifying one or more sections of the document to be retrieved
 
-[source,scala]
+[source,rust]
 ----
 include::devguide:example$src/subdocument.rs[tag=combine,indent=0]
 ----

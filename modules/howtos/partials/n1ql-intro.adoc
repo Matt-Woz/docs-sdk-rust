@@ -6,7 +6,7 @@ You can query for documents in Couchbase using the {sqlpp} query language (forme
 
 Our query service uses {sqlpp}, which will be fairly familiar to anyone who's used any dialect of SQL.
 <<Additional Resources>> for learning about {sqlpp} are listed at the bottom of the page.
-Before you get started you may wish to checkout the xref:6.5@server:n1ql:n1ql-language-reference/index.adoc[{sqlpp} intro page].
+Before you get started you may wish to checkout the xref:{version-server}@server:n1ql:n1ql-language-reference/index.adoc[{sqlpp} intro page].
 
 [TIP]
 .{sqlpp} Compared to Key-Value
