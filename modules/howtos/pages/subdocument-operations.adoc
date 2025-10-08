@@ -5,7 +5,7 @@
 [abstract]
 {description}
 
-Sub-Document operations may be quicker and more network-efficient than _full-document_ operations such as _upsert_, _replace_ and _get_ because they only transmit the accessed sections of the document over the network.
+Sub-Document operations may be quicker and more network-efficient than _full-document_ operations such as _upsert_, _replace_, and _get_ because they only transmit the accessed sections of the document over the network.
 
 Sub-Document operations are also atomic, in that if one Sub-Document mutation fails then all will, allowing safe modifications to documents with built-in concurrency control.
 
@@ -52,7 +52,7 @@ Considering the document:
 }
 ----
 
-The paths `name`, `addresses.billing.country` and `purchases.complete[0]` are all valid paths.
+The paths `name`, `addresses.billing.country`, and `purchases.complete[0]` are all valid paths.
 
 == Retrieving
 

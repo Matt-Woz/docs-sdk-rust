@@ -126,11 +126,9 @@ All supported versions of Couchbase Server (since 6.5) offer Durable Writes, und
 The optional `durability_level` parameter, which all mutating operations accept, allows the application to wait until this replication (or persistence) is successful before proceeding.
 The three replication level options are:
 
-    `MAJORITY` - The server will ensure that the change is available in memory on the majority of configured replicas.
-
-    `MAJORITY_AND_PERSIST_ACTIVE` - Majority level, plus persisted to disk on the active node.
-
-    `PERSIST_TO_MAJORITY` - Majority level, plus persisted to disk on the majority of configured replicas.
+* `MAJORITY` -- The server will ensure that the change is available in memory on the majority of configured replicas.
+* `MAJORITY_AND_PERSIST_ACTIVE` -- Majority level, plus persisted to disk on the active node.
+* `PERSIST_TO_MAJORITY` -- Majority level, plus persisted to disk on the majority of configured replicas.
 
 The options are in order of increasing levels of safety.
 For a given node, waiting for writes to storage is considerably slower than waiting for it to be available in-memory.

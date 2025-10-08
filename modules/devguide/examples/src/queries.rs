@@ -54,7 +54,7 @@ pub async fn adhoc_query(cluster: Cluster) -> Result<(), ExamplesError> {
 }
 
 pub async fn request_plus_query(cluster: Cluster) -> Result<(), ExamplesError> {
-    // #tag::requestplus[]
+    // #tag::request-plus[]
     let result = cluster
         .bucket("travel-sample")
         .scope("inventory")
@@ -63,7 +63,7 @@ pub async fn request_plus_query(cluster: Cluster) -> Result<(), ExamplesError> {
             QueryOptions::new().scan_consistency(ScanConsistency::RequestPlus),
         )
         .await?;
-    // #end::requestplus[]
+    // #end::request-plus[]
 
     Ok(())
 }
