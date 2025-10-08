@@ -2,6 +2,7 @@ mod auth;
 mod binary;
 mod capella_sample;
 mod client_settings;
+mod cluster_resources;
 mod concurrency;
 mod data_durability_consistency;
 mod diagnostics;
