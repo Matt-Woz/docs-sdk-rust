@@ -1,5 +1,5 @@
-= Couchbase Scala SDK Installation
-:description: Installation instructions for the Couchbase Scala Client.
+= Couchbase Rust SDK Installation
+:description: Installation instructions for the Couchbase Rust Client.
 :navtitle: Full Installation
 :page-partial:
 :page-toclevels: 2
