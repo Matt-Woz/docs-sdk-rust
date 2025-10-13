@@ -1,5 +1,5 @@
 = SDK Release Notes
-:description: Release notes, brief installation instructions, and download archive for the Couchbase Scala Client.
+:description: Release notes, brief installation instructions, and download archive for the Couchbase Rust Client.
 :navtitle: Release Notes
 :page-toclevels: 2
 :page-aliases: relnotes-scala-sdk
