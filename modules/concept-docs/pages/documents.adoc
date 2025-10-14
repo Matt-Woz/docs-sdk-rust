@@ -119,7 +119,7 @@ include::{version-common}@sdk:shared:partial$documents.adoc[tag=counters3]
 
 The SDK provides a high-level abstraction over the simple `incr()`/`decr()` of Couchbase Server's memcached binary protocol, using `collections.binary()`.
 This enables you to work with counters using `get()` and `upsert()` operations -- allowing, _inter alia_, the use of durability options with the operations.
-You will find several ways of working with counters https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/AsyncBinaryCollection.html[in the API docs].
+You will find several ways of working with counters {sdk-api-link} collection/struct.BinaryCollection.html#impl-BinaryCollection[in the API docs].
 
 // Expiry
 include::{version-common}@sdk:shared:partial$documents.adoc[tag=expiration]
