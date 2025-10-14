@@ -9,13 +9,13 @@
 // Note to editors
 //
 // This page pulls in content from
-// https://github.com/couchbase/docs-sdk-common/blob/release/7.6/modules/shared/partials/start-using-sdk.adoc
+// https://github.com/couchbase/docs-sdk-common/blob/release/8.0/modules/shared/partials/start-using-sdk.adoc
 //
 // and code samples from
-// https://github.com/couchbase/docs-sdk-scala/tree/release/1.7/modules/devguide/examples/scala
+// https://github.com/couchbase/docs-sdk-rust/tree/release/1.0/modules/devguide/examples/
 //
 // It can be seen built at
-// https://docs.couchbase.com/scala-sdk/1.7/hello-world/start-using-sdk.html
+// https://docs.couchbase.com/rust-sdk/1.0/hello-world/start-using-sdk.html
 
 
 [abstract]
@@ -27,7 +27,7 @@ You can read more about data modeling <<data-modeling,below>>, but first let's l
 // remember to add a nomenclature note to the next version of this page for LCB.
 
 .Upsert with a Unique ID
-[source,scala]
+[source,rust]
 ----
 include::devguide:example$src/subdocument.rs[tag=upsert,indent=0]
 ----
