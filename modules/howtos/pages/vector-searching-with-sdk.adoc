@@ -121,6 +121,6 @@ include::devguide:example$scala/FTS.scala[tag=vector4,indent=0]
 
 * xref:server:vector-search:vector-search.adoc[Vector Search for AI Apps docs (self-managed Couchbase Server)]
 * xref:cloud::vector-search:vector-search.adoc[Vector Search for AI Apps docs (Capella DBaaS)]
-// * Vector Search in the https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/search/vector/index.html[Scala API reference].
+* Vector Search in the https://docs.rs/couchbase/latest/couchbase/search/request/struct.SearchRequest.html#method.vector_search[Rust API reference].
 
 // https://developer.couchbase.com/tutorial-python-langchain-pdf-chat
