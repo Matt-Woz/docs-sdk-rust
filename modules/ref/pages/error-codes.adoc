@@ -1,5 +1,5 @@
 = Error Messages
-:description: The standardized error codes returned by the Couchbase Scala SDK, from cloud connection to sub-document.
+:description: The standardized error codes returned by the Couchbase Rust SDK, from cloud connection to sub-document.
 :page-toclevels: 2
 
 [abstract]
