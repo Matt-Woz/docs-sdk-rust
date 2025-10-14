@@ -20,7 +20,7 @@ pub async fn connect() {
             // For a secure cluster connection, use `couchbases://<your-cluster-ip>` instead.
             "couchbase://localhost",
             ClusterOptions::new(Authenticator::PasswordAuthenticator(
-                PasswordAuthenticator::new(username.to_string(), password.to_string()),
+                PasswordAuthenticator::new(username, password),
             )),
         ),
     )
@@ -37,7 +37,7 @@ pub async fn multiple_endpoints() -> Result<(), ExamplesError> {
     let cluster = Cluster::connect(
         connection_string,
         ClusterOptions::new(Authenticator::PasswordAuthenticator(
-            PasswordAuthenticator::new(username.to_string(), password.to_string()),
+            PasswordAuthenticator::new(username, password),
         )),
     )
     .await?;
@@ -65,9 +65,9 @@ pub async fn secure_connection() -> Result<(), ExamplesError> {
     let cluster = Cluster::connect(
         "couchbases://node1.example.com",
         ClusterOptions::new(Authenticator::PasswordAuthenticator(
-            PasswordAuthenticator::new(username.to_string(), password.to_string()),
+            PasswordAuthenticator::new(username, password),
         ))
-        .tls_options(TlsOptions::new().ca_certificate(ca_cert)),
+        .tls_options(TlsOptions::new().add_ca_certificate(ca_cert)),
     )
     .await?;
     // end::secure-connection[]
@@ -82,7 +82,7 @@ pub async fn insecure_connection() -> Result<(), ExamplesError> {
     let cluster = Cluster::connect(
         "couchbases://node1.example.com",
         ClusterOptions::new(Authenticator::PasswordAuthenticator(
-            PasswordAuthenticator::new(username.to_string(), password.to_string()),
+            PasswordAuthenticator::new(username, password),
         ))
         .tls_options(TlsOptions::new().danger_accept_invalid_certs(true)),
     )

@@ -82,8 +82,8 @@ pub async fn at_plus_query(cluster: Cluster) -> Result<(), ExamplesError> {
             )
             .await?;
 
-        let mut state = MutationState::new();
-        state.push_token(result.mutation_token().clone().unwrap());
+        // MutationState can be created from a token directly.
+        let state = MutationState::from(result.mutation_token().clone().unwrap());
 
         state
     };
@@ -93,9 +93,7 @@ pub async fn at_plus_query(cluster: Cluster) -> Result<(), ExamplesError> {
         .scope("inventory")
         .query(
             "SELECT count(*) from `airport`",
-            QueryOptions::new()
-                .scan_consistency(ScanConsistency::AtPlus)
-                .consistent_with(mutation_state),
+            QueryOptions::new().scan_consistency(ScanConsistency::AtPlus(mutation_state)),
         )
         .await?;
     // #end::atplus[]
