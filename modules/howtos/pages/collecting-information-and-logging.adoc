@@ -18,7 +18,7 @@ Rust has several logging implementations available including https://docs.rs/env
 
 To enable logging you must add a logging crate to your `Cargo.toml` file:
 
-[source]
+[source,toml]
 ----
 [dependencies]
 env_logger = "0.11"
@@ -34,7 +34,7 @@ include::devguide:example$src/logging.rs[tag=env-logger,indent=0]
 
 This will create a logger which logs at the level specified by the `RUST_LOG` environment variable, as an example:
 
-[source]
+[source,console]
 ----
 $ RUST_LOG='couchbase=trace' cargo run
 ----
