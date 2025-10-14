@@ -1,7 +1,11 @@
 use crate::examples_error::ExamplesError;
+use crate::timeout::timeout;
+use couchbase::authenticator::{Authenticator, PasswordAuthenticator};
 use couchbase::cluster::Cluster;
-use couchbase::options::diagnostic_options::PingOptions;
+use couchbase::options::cluster_options::ClusterOptions;
+use couchbase::options::diagnostic_options::{PingOptions, WaitUntilReadyOptions};
 use couchbase::service_type::ServiceType;
+use std::time::Duration;
 
 pub async fn ping(cluster: Cluster) -> Result<(), ExamplesError> {
     // #tag::ping[]
@@ -58,6 +62,31 @@ pub async fn ping(cluster: Cluster) -> Result<(), ExamplesError> {
     }
          */
     // #end::ping[]
+
+    Ok(())
+}
+
+pub async fn wait_until_ready() -> Result<(), ExamplesError> {
+    // #tag::cluster-wait-until-ready[]
+    let username = "<your-username>";
+    let password = "<your-password>";
+
+    let cluster = timeout(
+        Duration::from_secs(60),
+        Cluster::connect(
+            // For a secure cluster connection, use `couchbases://<your-cluster-ip>` instead.
+            "couchbase://localhost",
+            ClusterOptions::new(Authenticator::PasswordAuthenticator(
+                PasswordAuthenticator::new(username, password),
+            )),
+        ),
+    )
+    .await?;
+
+    cluster
+        .wait_until_ready(WaitUntilReadyOptions::default())
+        .await?;
+    // #end::cluster-wait-until-ready[]
 
     Ok(())
 }

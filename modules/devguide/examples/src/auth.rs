@@ -36,7 +36,7 @@ async fn certificate() -> Result<(), ExamplesError> {
     Cluster::connect(
         "couchbases://10.112.180.101",
         ClusterOptions::new(Authenticator::CertificateAuthenticator(authenticator))
-            .tls_options(TlsOptions::new().ca_certificate(root_cert)),
+            .tls_options(TlsOptions::new().add_ca_certificate(root_cert)),
     )
     .await?;
     // end::certificate[]

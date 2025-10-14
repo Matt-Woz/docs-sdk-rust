@@ -90,8 +90,8 @@ pub async fn consistency(scope: Scope) -> Result<(), ExamplesError> {
         )
         .await?;
 
-    let mutation_state =
-        MutationState::new_with_tokens(vec![insert_result.mutation_token().clone().unwrap()]);
+    // MutationState can be created from a token directly.
+    let mutation_state = MutationState::from(insert_result.mutation_token().clone().unwrap());
 
     let result = scope
         .search(

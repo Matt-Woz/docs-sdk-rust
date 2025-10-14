@@ -15,6 +15,7 @@ mod subdocument;
 mod timeout;
 mod transcoding;
 mod user_management;
+mod logging;
 
 #[tokio::main]
 async fn main() {
