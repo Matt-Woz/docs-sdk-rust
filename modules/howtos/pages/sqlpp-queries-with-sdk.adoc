@@ -40,7 +40,7 @@ The above example demonstrates returning the results as `serde_json::Value`, a f
 
 `rows` can be deserialized into any type that implements `serde::DeserializeOwned`.
 
-Please see xref:json.adoc[this guide] for more information on the supported ways of working with JSON.
+// Please see xref:json.adoc[this guide] for more information on the supported ways of working with JSON.
 
 include::howtos:partial$n1ql-placeholders.adoc[]
 include::howtos:partial$n1ql-scan-consistency.adoc[]
