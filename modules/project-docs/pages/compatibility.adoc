@@ -71,13 +71,10 @@ It is best to upgrade either the SDK or the Couchbase version you are using.
 |===
 | | 1.0
 
-| *Server 7.0 - 7.1*
+| *Server 7.2*
 | *◎*
 
-| *Server 7.2 - 7.6*
-| *✔*
-
-| *Server 8.0*
+| *Server 7.6 - 8.0*
 | *✔*
 |===
 
