@@ -124,6 +124,7 @@ include::devguide:example$src/diagnostics.rs[tag=cluster-wait-until-ready,indent
 ====
 
 
+////
 == SDK Telemetry from the Server
 
 In addition to Tracing and other metrics, and client logging, SDK is telemetry is also sent to the Server -- available from 8.0, and in new Capella Operational clusters -- for ingestion with other Prometheus metrics.
@@ -148,3 +149,4 @@ but note that metrics are collected per node,
 and a central Prometheus instance should be set to collect all metrics so that information is not lost in case of a sudden failover.
 
 Also note that if the cluster is behind a load balancer, the collected metrics may not accurately record the actual correct node with which the SDK interacts.
+////
