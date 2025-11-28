@@ -61,7 +61,7 @@ Parameterizing the query, as with xref:sqlpp-queries-with-sdk.adoc#parameterized
 This can be more efficient, unless you are doing a lot of optimization to your query.
 
 .Parameterized Vector Query
-[source,java]
+[source,rust]
 ----
 include::devguide:example$src/queries.rs[tag=parameterizedvectorquery,indent=2]
 ----
