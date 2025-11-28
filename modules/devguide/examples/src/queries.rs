@@ -249,3 +249,50 @@ pub async fn cluster_level_query(cluster: Cluster) -> Result<(), ExamplesError> 
 
     Ok(())
 }
+
+pub async fn hyperscale_index(cluster: Cluster) -> Result<(), ExamplesError> {
+    // #tag::hyperscale[]
+    let statement =
+        "SELECT d.id, d.question, d.wanted_similar_color_from_search, \
+         ARRAY_CONCAT( \
+            d.couchbase_search_query.knn[0].vector[0:4], \
+            ['...'] \
+         ) AS vector \
+         FROM `vector-sample`.`color`.`rgb-questions` AS d \
+         WHERE d.id = '#87CEEB';";
+
+    let mut result = cluster.query(statement, QueryOptions::new().metrics(true).await)?;
+
+    let mut rows = result.rows();
+    while let Some(row) = rows.next().await {
+        let row: serde_json::Value = row?;
+        println!("Row: {}", row);
+    }
+    // #end::hyperscale[]
+    Ok(())
+}
+
+pub async fn parameterized_vector_query(cluster: Cluster) -> Result<(), ExamplesError> {
+    // #tag::parameterizedvectorquery[]
+    let statement = "SELECT d.id, d.question, d.wanted_similar_color_from_search, \
+                     ARRAY_CONCAT( \
+                        d.couchbase_search_query.knn[0].vector[0:4], \
+                        ['...'] \
+                     ) AS vector \
+                     FROM `vector-sample`.`color`.`rgb-questions` AS d \
+                     WHERE d.id = $id;";
+
+    let mut result = cluster
+        .query(
+            statement,
+            QueryOptions::new().add_named_parameter("id", "#87CEEB")?,
+        )
+        .await?;
+    let mut rows = result.rows();
+    while let Some(row) = rows.next().await {
+        let row: serde_json::Value = row?;
+        println!("Row: {}", row);
+    }
+    // #end::parameterizedvectorquery[]
+    Ok(())
+}

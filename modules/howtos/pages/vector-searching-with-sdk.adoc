@@ -52,9 +52,9 @@ Here is the xref:server:vector-index:hyperscale-vector-index.adoc#query-example[
 wrapped inside the {name-sdk} Query API.
 
 .Hyperscale Index Example
-[source,java]
+[source,rust]
 ----
-include::devguide:example$java/SimpleVectorQuery.java[tag=hyperscale,indent=2]
+include::devguide:example$src/queries.rs[tag=hyperscale,indent=2]
 ----
 
 Parameterizing the query, as with xref:sqlpp-queries-with-sdk.adoc#parameterized-queries[regular queries], will allow the reuse of the xref:server:n1ql:n1ql-intro/queriesandresults.adoc#prepare-stmts[Query Plan].
@@ -63,11 +63,8 @@ This can be more efficient, unless you are doing a lot of optimization to your q
 .Parameterized Vector Query
 [source,java]
 ----
-include::devguide:example$java/ParameterizedVectorQuery.java[tag=parameterized,indent=2]
+include::devguide:example$src/queries.rs[tag=parameterizedvectorquery,indent=2]
 ----
-
-
-
 
 == Vector Search With the Search Service
 
@@ -117,30 +114,33 @@ xref:server:vector-search:pre-filtering-vector-search.adoc#about-pre-filtering[p
 This is a non-vector query that the server executes first to get an intermediate result.
 Then it executes the vector query on the intermediate result to get the final result.
 
-[source,java]
+[source,rust]
 ----
-public VectorQuery prefilter(SearchQuery prefilter)
+impl VectorQuery {
+    pub fn prefilter(mut self, prefilter: Query) -> Self;
+}
 ----
 
 If no prefilter is specified, the server executes the vector query on all indexed documents.
 
-[source,java]
+[source,rust]
 ----
-  .setOptions(VectorQueryOptions.newBuilder()
-                    .setNumCandidates(numCandidates)
-                        .setPrefilter(SearchQuery.newBuilder()
-                                .setMatch(MatchQuery.newBuilder()
-                                        .setMatch("primary").setField("color_wheel_pos"))))
+    VectorQuery::with_vector("vector_field", vector_query)
+        .num_candidates(num_candidates)
+        .prefilter(
+            Query::Match(
+                MatchQuery::new("primary")
+                    .field("color_wheel_pos"),
+            ),
+        );
 ----
 
 The prefilter can be any Search Query --
 from a simple match, as above, to a string query:
 
-[source,java]
+[source,rust]
 ----
-  .setPrefilter(SearchQuery.newBuilder()
-                        .setQueryString(QueryStringQuery.newBuilder()
-                                .setQuery("+description:sea -color_hex:fff5ee")))
+    .prefilter(Query::QueryString(QueryStringQuery::new("+description:sea -color_hex:fff5ee")))
 ----
 
 See the link:++https://docs.couchbase.com/sdk-api/couchbase-java-client/com/couchbase/client/java/search/vector/VectorQuery.html#prefilter(com.couchbase.client.java.search.SearchQuery)++[API reference].
