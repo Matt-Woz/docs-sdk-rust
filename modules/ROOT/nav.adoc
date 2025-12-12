@@ -66,6 +66,7 @@
 *** xref:home:contribute:index.adoc[Improve the Docs]
 * xref:ref:index.adoc[]
 ** {sdk-api-link}[API Reference^]
+** https://github.com/couchbaselabs/couchbase-rs/[Rust SDK Source Code]
 ** xref:ref:client-settings.adoc[]
 ** xref:ref:error-codes.adoc[]
 ** xref:ref:glossary.adoc[Glossary]
