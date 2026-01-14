@@ -1,0 +1,16 @@
+= Using Couchbase Transactions
+:reftext: Distributed ACID Transactions from the Rust SDK
+// :description: A practical guide on using Couchbase Distributed ACID transactions, via the Rust SDK.
+:page-topic-type: howto
+:page-toclevels: 2
+// TODO: Uncomment when we actually have transactions content to show.
+//:page-pagination: next
+
+////
+[abstract]
+{description}
+////
+
+
+Distributed ACID Transactions are not currently available for the Rust SDK.
+include::{version-common}@sdk:shared:partial$acid-transactions.adoc[tag=other]
