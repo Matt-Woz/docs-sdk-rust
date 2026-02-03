@@ -112,6 +112,65 @@ Idempotent operations are much easier to handle, as on ambiguous error results (
 Most key-value operations are idempotent.
 For those that aren't, such as a Sub-Document `array_append` call, or a counter increment, the application should, on an ambiguous result, first read the document to see if that change was applied.
 
+
+
+
+== Customizing the RetryStrategy
+
+A custom `RetryStrategy` can be provided both at the environment (so it will take effect globally):
+
+[source,go]
+----
+include::devguide:example$go/ErrorHandling.go[tag=customglobal,indent=0]
+----
+
+Or it can be applied on a per-request basis:
+
+[source,go]
+----
+include::devguide:example$go/ErrorHandling.go[tag=customreq,indent=0]
+----
+
+Both approaches are valid, although we recommend for most use cases to stick with the defaults and only to override it on a per requests basis.
+
+If you find yourself overriding every request with the same different strategy, it can make sense to apply it locally in order to DRY it up a bit. 
+There are no performance differences with both approaches, but make sure that even if you pass in a custom one on every request that you do not create a new one each time but rather share it across calls.
+
+While it is possible to implement the `RetryStrategy` from scratch, we *strongly recommend* that instead the `BestEffortRetryStrategy` is extended and only the specifiy `RetryReasons` that need to be customized are handled. 
+In practice, it should look something like this:
+
+[source,go]
+----
+include::devguide:example$go/ErrorHandling.go[tag=customclass,indent=0]
+----
+
+Importantly, do not omit the `return super.shouldRetry(request, reason);` as a fallback so that all other cases are handled for you.
+
+Implementing a concrete example, there is a chance that you are using a `CircuitBreaker` configuration and want to fail-fast on an open circuit:
+
+
+[source,go]
+----
+include::devguide:example$go/ErrorHandling.go[tag=failfastcircuit,indent=0]
+----
+
+One important rule is that you should never block inside `shouldRetry`, since it is called on the hot code path and can considerably impact performance. 
+This is why the return type is enclosed in a `CompletableFuture`, indicating an async response type.
+
+If you need to call out to third party systems over the network or the file system to make retry decisions, we recommend that you do this from a different thread and communicate via atomics, for example, so that the hot code path only needs to do cheap lookups.
+
+The `RetryAction` indicates what should be done with the request: if you return a `RetryAction.noRetry()`, the orchestrator will cancel the request, resulting in a `RequestCanceledException`. 
+The other option is to call it through `RetryAction withDuration(Duration duration)`, indicating the duration when the request should be retried next. 
+This allows you to customize not only _if_ a request should be retried, but also _when_.
+
+IMPORTANT: Not retrying operations is considered safe from a data-loss perspective. 
+If you are changing the retry strategy of individual requests keep the semantics discussed in <<Idempotent vs. Non-Idempotent Requests>> in mind. 
+You can check if a request is idempotent through the `idempotent()` getter, and also check if the `RetryReason` allows for non-idempotent retry through the `allowsNonIdempotentRetry()` getter. 
+If in doubt, check the implementation of the `BestEffortRetryStrategy` for guidance.
+
+
+
+
 == Query and Analytics Errors
 
 A {sqlpp} (formerly N1QL) query either returns results or an error as the same way as KV, like so:
