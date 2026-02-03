@@ -3,7 +3,7 @@
 This repository hosts the documentation source for the https://docs.couchbase.com/rust-sdk/1.0/hello-world/overview.html[Couchbase Rust SDK].
 
 This branch documents the 1.0 release of the SDK.
-It follows the https://docs.couchbase.com/rust-sdk/1.0/project-docs/compatibility.html#api-version[SDK 3.8 API].
+It follows the https://docs.couchbase.com/rust-sdk/1.0/project-docs/compatibility.html#api-version[SDK 3.9 API].
 
 This branch reflects the new Information Architecture for the SDK docs.
 
@@ -114,8 +114,6 @@ A value of `3` should not be used, save in exceptionally complicated pages like 
 Update the following files:
 
 * antora.yml
-* build.gradle
-* modules/devguide/examples/rust/pom.xml
 * modules/project-docs/pages/sdk-release-notes.adoc
 
 === New Branches
@@ -131,5 +129,5 @@ This is in the process of being changed -- documentation will appear here once t
 
 == Docs License
 
-©2025 Couchbase, Inc.
+©2026 Couchbase, Inc.
 This work is licensed under https://creativecommons.org/licenses/by-nc-sa/4.0/[CC BY-NC-SA 4.0].
