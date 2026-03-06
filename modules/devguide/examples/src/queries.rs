@@ -83,7 +83,7 @@ pub async fn at_plus_query(cluster: Cluster) -> Result<(), ExamplesError> {
             .await?;
 
         // MutationState can be created from a token directly.
-        let state = MutationState::from(result.mutation_token().clone().unwrap());
+        let state = MutationState::new().push_token(result.mutation_token().unwrap().clone());
 
         state
     };
@@ -261,7 +261,7 @@ pub async fn hyperscale_index(cluster: Cluster) -> Result<(), ExamplesError> {
          FROM `vector-sample`.`color`.`rgb-questions` AS d \
          WHERE d.id = '#87CEEB';";
 
-    let mut result = cluster.query(statement, QueryOptions::new().metrics(true).await)?;
+    let mut result = cluster.query(statement, QueryOptions::new().metrics(true)).await?;
 
     let mut rows = result.rows();
     while let Some(row) = rows.next().await {
