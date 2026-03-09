@@ -21,16 +21,6 @@ The Couchbase {name-sdk} allows {name_platform} applications to access a Couchba
 Capella or self-managed.
 // -- other SDKs are available for Couchbase Lite (edge or mobile devices) and Capella Columnar (real-time analytics)
 
-[IMPORTANT]
-.Developer Preview
-====
-This SDK is a Developer Preview, providing early access before the generally available (GA) release is ready.
-It enables you to play with the APIs to get a sense of how they work.
-Preview Mode features and their use are subject to Couchbase’s “Non-GA Offering Supplemental Terms” set forth in the https://www.couchbase.com/LA08242020[License Agreement]. 
-Preview Mode features may not be functionally complete and are not intended for production use. 
-They are intended for development and testing purposes only.
-====
-
 
 xref:hello-world:start-using-sdk.adoc[Quickstart Guide] |
 xref:project-docs:sdk-release-notes.adoc[] |

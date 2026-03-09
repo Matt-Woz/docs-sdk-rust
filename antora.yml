@@ -7,7 +7,6 @@ nav:
 
 asciidoc:
   attributes:
-    page-status: Developer Preview
     page-nav-header-levels: 2
     server_version: '8.0.0'
     sdk_current_version: '1.0.0'
