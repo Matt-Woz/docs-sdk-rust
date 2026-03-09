@@ -91,7 +91,7 @@ pub async fn consistency(scope: Scope) -> Result<(), ExamplesError> {
         .await?;
 
     // MutationState can be created from a token directly.
-    let mutation_state = MutationState::new().push_token(insert_result.mutation_token().unwrap().clone());
+    let mutation_state = MutationState::from(insert_result.mutation_token().unwrap().clone());
 
     let result = scope
         .search(

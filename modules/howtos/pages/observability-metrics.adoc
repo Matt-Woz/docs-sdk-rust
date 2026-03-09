@@ -30,7 +30,7 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["fmt"] }
 ----
 
-The simplest setup registers `LoggingMeter` together with a `fmt` layer for general log output.
+The simplest setup registers `LoggingMeter` together with an `fmt` layer for general log output.
 This must be called within a Tokio runtime:
 
 [source,rust]
@@ -92,7 +92,7 @@ Each report contains one object for each service that got used.
 For each operation, a total amount of recorded requests is reported, as well as percentiles from a histogram in microseconds.
 The meta section on top contains information such as the emit interval in seconds so tooling can later calculate numbers like requests per second.
 
-The LoggingMeter can be configured on the environment as shown above.
+The `LoggingMeter` can be configured on the environment as shown above.
 The following table shows the currently available properties:
 
 .LoggingMeterOptions Properties
@@ -107,7 +107,7 @@ The following table shows the currently available properties:
 
 The Rust tracing ecosystem integrates with OpenTelemetry via the
 https://crates.io/crates/tracing-opentelemetry[`tracing-opentelemetry`] crate, OpenTelemetry metrics are supported with the SDK via the https://docs.rs/tracing-opentelemetry/latest/tracing_opentelemetry/struct.MetricsLayer.html[MetricsLayer]
-which bridges uses  to any OpenTelemetry-compatible backend (Prometheus, Grafana, Datadog, etc.).
+which bridges SDK metrics to any OpenTelemetry-compatible backend (Prometheus, Grafana, Datadog, etc.).
 
 Add the relevant dependencies to your `Cargo.toml`:
 

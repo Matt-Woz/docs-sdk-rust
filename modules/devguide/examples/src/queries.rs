@@ -83,7 +83,7 @@ pub async fn at_plus_query(cluster: Cluster) -> Result<(), ExamplesError> {
             .await?;
 
         // MutationState can be created from a token directly.
-        let state = MutationState::new().push_token(result.mutation_token().unwrap().clone());
+        let state = MutationState::from(result.mutation_token().unwrap().clone());
 
         state
     };
