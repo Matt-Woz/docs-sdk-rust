@@ -3,8 +3,7 @@ use couchbase::cluster::Cluster;
 use couchbase::management::buckets::bucket_settings::{
     BucketSettings, BucketType, ConflictResolutionType,
 };
-use couchbase::management::collections::collection_manager::CreateCollectionSettings;
-use couchbase::management::collections::collection_settings::MaxExpiryValue;
+use couchbase::management::collections::collection_settings::{CreateCollectionSettings, MaxExpiryValue};
 use couchbase::management::users::user::{Role, User};
 use couchbase::options::query_index_mgmt_options::{
     CreatePrimaryQueryIndexOptions, CreateQueryIndexOptions,

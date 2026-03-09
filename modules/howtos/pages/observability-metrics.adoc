@@ -8,134 +8,129 @@
 In addition, it also makes sense to capture information that aggregates request data (i.e. requests per second),
 but also data which is not tied to a specific request at all (i.e. resource utilization).
 
-The SDK exposes metrics for operation durations, broken down into p50, p90, p99, p99.9, and p100 percentiles.
+The SDK exposes metrics for operation durations, broken down into p50, p90, p99, p99.9, and p100 percentiles, reported per service and per operation type.
 
-These metrics can either be logged periodically into the application logs, using the `LoggingMeter` (this is the default behaviour).
+SDK metrics are reported via a tracing event on the `couchbase::metrics` target, which can be consumed by any compatible https://docs.rs/tracing-subscriber/latest/tracing_subscriber/layer/trait.Layer.html[`tracing_subscriber::Layer`].
+The SDK ships the `LoggingMeter` layer which periodically logs them as JSON into the application's `tracing` output.
 
-Or, sent into the OpenTelemetry or Micrometer libraries, where they can be sent on to the user's metrics infrastructure -- such as Prometheus.
+Both `LoggingMeter` and `ThresholdLoggingTracer` (see xref:howtos:observability-tracing.adoc[Request Tracing])
+are layers that can be composed on a single tracing https://docs.rs/tracing-core/0.1.35/tracing_core/subscriber/trait.Subscriber.html[Subscriber], alongside any other layers such as `tracing_subscriber::fmt::layer()`.
 
-== The Default LoggingMeter
+== The LoggingMeter
 
-The default implementation aggregates and logs request and response metrics.
+`LoggingMeter` is a `tracing_subscriber::Layer` that collects per-operation latency histograms and emits a JSON report on a configurable interval.
+If no other meters are enabled then it is *strongly* advised that you enable this by default to aid with debugging, along with the `ThresholdLoggingTracer`
 
-By default the metrics will be emitted every 10 minutes, but you can customize the emit interval as well:
+Set up your `Cargo.toml` dependencies:
 
-[source,go]
+[source,toml]
 ----
-include::devguide:example$go/Metrics.go[tag=metrics-enable-custom,indent=0]
+[dependencies]
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
 ----
 
-Once enabled, there is no further configuration needed. The `LoggingMeter` will emit the collected request statistics every interval.
-A possible report looks like this (prettified for better readability):
+The simplest setup registers `LoggingMeter` together with an `fmt` layer for general log output.
+This must be called within a Tokio runtime:
+
+[source,rust]
+----
+include::devguide:example$src/observability.rs[tag=metrics-logging-meter,indent=0]
+----
+
+Once registered, the `LoggingMeter` will emit the collected request statistics every interval.
+
+A possible report looks like this (prettified for readability):
 
 [source,json]
 ----
 {
-   "meta":{
-      "emit_interval_s":10
+   "meta": {
+      "emit_interval_s": 600
    },
-   "query":{
-      "127.0.0.1":{
-         "total_count":9411,
-         "percentiles_us":{
-            "50.0":544.767,
-            "90.0":905.215,
-            "99.0":1589.247,
-            "99.9":4095.999,
-            "100.0":100663.295
+   "operations": {
+      "query": {
+         "query": {
+            "total_count": 9411,
+            "percentiles_us": {
+               "50.0": 544,
+               "90.0": 905,
+               "99.0": 1589,
+               "99.9": 4095,
+               "100.0": 100663
+            }
          }
-      }
-   },
-   "kv":{
-      "127.0.0.1":{
-         "total_count":9414,
-         "percentiles_us":{
-            "50.0":155.647,
-            "90.0":274.431,
-            "99.0":544.767,
-            "99.9":1867.775,
-            "100.0":574619.647
+      },
+      "kv": {
+         "get": {
+            "total_count": 9414,
+            "percentiles_us": {
+               "50.0": 155,
+               "90.0": 274,
+               "99.0": 544,
+               "99.9": 1867,
+               "100.0": 574619
+            }
+         },
+         "upsert": {
+            "total_count": 2100,
+            "percentiles_us": {
+               "50.0": 120,
+               "90.0": 210,
+               "99.0": 480,
+               "99.9": 1200,
+               "100.0": 48000
+            }
          }
       }
    }
 }
 ----
 
-Each report contains one object for each service that got used and is further separated on a per-node basis so they can be analyzed in isolation.
+Each report contains one object for each service that got used.
 
-For each service / host combination, a total amount of recorded requests is reported, as well as percentiles from a histogram in microseconds. 
+For each operation, a total amount of recorded requests is reported, as well as percentiles from a histogram in microseconds.
 The meta section on top contains information such as the emit interval in seconds so tooling can later calculate numbers like requests per second.
 
 The `LoggingMeter` can be configured on the environment as shown above.
 The following table shows the currently available properties:
 
-.LoggingMeterConfig Properties
+.LoggingMeterOptions Properties
 [options="header"]
 |====
 | Property       | Default | Description
-| `enabled`   | false | If the `LoggingMeter` should be enabled.
-| `emitInterval` | 600 seconds | The interval where found orphans are emitted.
+| `emit_interval` | 600 seconds | How often the meter will emit the collected metrics report.
 |====
 
-
+[#otel]
 == OpenTelemetry Integration
 
-The SDK supports plugging in any `OpenTelemetry` metrics consumer instead of using the default `LoggingMeter`.
+The Rust tracing ecosystem integrates with OpenTelemetry via the
+https://crates.io/crates/tracing-opentelemetry[`tracing-opentelemetry`] crate, OpenTelemetry metrics are supported with the SDK via the https://docs.rs/tracing-opentelemetry/latest/tracing_opentelemetry/struct.MetricsLayer.html[MetricsLayer]
+which bridges SDK metrics to any OpenTelemetry-compatible backend (Prometheus, Grafana, Datadog, etc.).
 
-To do this, first add this to your Maven, or the equivalent to your build tool of choice:
+Add the relevant dependencies to your `Cargo.toml`:
 
-[source,xml]
+[source,toml]
 ----
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-bom</artifactId>
-            <version>1.17.0</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-<dependencies>
-    <dependency>
-        <groupId>com.couchbase.client</groupId>
-        <artifactId>metrics-opentelemetry</artifactId>
-        <version>0.4.4</version>
-    </dependency>
-    <dependency>
-        <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-api</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-sdk</artifactId>
-    </dependency>
-</dependencies>
+[dependencies]
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
+tracing-opentelemetry = "0.32"
+opentelemetry = "0.31"
+opentelemetry_sdk = "0.31"
+opentelemetry-otlp = { version = "0.31", features = ["grpc-tonic", "gzip-tonic"] }
 ----
 
-In addition, you'll need to get the metrics data into your metrics backend.
-This is often done by having the metrics backend (such as Prometheus) regularly gather, or 'scrape', the metrics data.
+Then configure the OpenTelemetry pipeline and add its layer to your subscriber stack alongside any other layers:
 
-There are multiple approaches here.
-The `opentelemetry-exporter-prometheus` library makes it possible to open an HTTP server in the application that Prometheus can then scape.
-
-As that library is in alpha, here we will instead show how to send OpenTelemetry metrics into `opentelemetry-collector`, where it can be scraped by Prometheus or another metrics backend.
-
-This aligns well with tracing, where a recommended approach is also to send OpenTelemetry spans into `opentelemetry-collector`, where they can be processed and forwarded elsewhere.
-See xref:howtos:observability-tracing.adoc[the Request Tracing documentation] for more information.
-
-For metrics, add this logic to the application:
-
-[source,go]
+[source,rust]
 ----
-include::devguide:example$go/Metrics.go[tag=metrics-otel-prometheus,indent=0]
+include::devguide:example$src/observability.rs[tag=otel-metrics,indent=0]
 ----
-
 
 At this point the SDK is hooked up with the OpenTelemetry metrics and will emit them to the exporter.
 
-A `db.couchbase.operations` histogram is exported, which will appear in Prometheus as `db_couchbase_operations`.
+A `db.client.operation.duration` histogram is exported, which will appear in Prometheus as `db_client_operation_duration`.
 
 It has these tags: `db.couchbase.service` ("kv", "query", etc.) and `db.operation` ("upsert", "query", etc.)
 
@@ -153,17 +148,17 @@ receivers:
         endpoint: '0.0.0.0:4318'
 
 exporters:
-  logging:
-    loglevel: debug
+  debug:
+    verbosity: detailed
   prometheus:
     endpoint: '0.0.0.0:10000'
 
 service:
   pipelines:
     metrics:
-      receivers: [otlp]
-      processors: []
-      exporters: [prometheus, logging]
+      receivers: [ otlp ]
+      processors: [ ]
+      exporters: [ prometheus, debug ]
 ```
 
 And file `prometheus.yaml`:
@@ -193,92 +188,10 @@ Some things to note:
 * `opentelemetry-collector` will store the metrics, and exposes port 10000 for Prometheus to periodically scrape.
 
 Now run the application.
-All being well, `opentelemetry-collector` should regularly log that it's receiving the `db.couchbase.operations` metric, as it has been configured with a `logging` exporter.
+All being well, `opentelemetry-collector` should regularly log that it's receiving the `db.client.operation.duration` metric, as it has been configured with a `debug` exporter.
 
-And Prometheus (the UI is available on http://localhost:9090) should allow querying for `db_couchbase_operations`.
+And Prometheus (the UI is available on http://localhost:9090) should allow querying for `db_client_operation_duration`.
 (Though a real deployment will generally use another tool, such as Grafana, for visualisation.)
 
 If this fails, check http://localhost:9090/api/v1/targets to see if Prometheus is unable to contact `opentelemetry-collector`.
 
-
-== Micrometer Integration
-
-In addition to OpenTelemetry, we also provide a module allowing SDK metrics to be integrated into Micrometer.
-
-To do this, first add this to your Maven, or the equivalent to your build tool of choice:
-
-[source,xml]
-----
-<dependency>
-    <groupId>com.couchbase.client</groupId>
-    <artifactId>metrics-micrometer</artifactId>
-    <version>0.4.4</version>
-</dependency>
-<dependency>
-    <groupId>io.prometheus</groupId>
-    <artifactId>simpleclient</artifactId>
-    <version>0.16.0</version>
-</dependency>
-<dependency>
-    <groupId>io.prometheus</groupId>
-    <artifactId>simpleclient_httpserver</artifactId>
-    <version>0.16.0</version>
-</dependency>
-<dependency>
-    <groupId>io.micrometer</groupId>
-    <artifactId>micrometer-registry-prometheus</artifactId>
-    <version>1.10.5</version>
-</dependency>
-<!-- Gives improved histograms for Micrometer when on classpath -->
-<dependency>
-    <groupId>org.hdrhistogram</groupId>
-    <artifactId>HdrHistogram</artifactId>
-    <version>2.1.12</version>
-</dependency>
-----
-
-You can now create a Micrometer registry and pass it into the SDK.
-Here we're using a Prometheus Micrometer registry, and setting up an HTTP server inside the application that will run on port 10000 and which Prometheus can scrape.
-
-But Micrometer of course, like OpenTelemetry, can support many more metrics backends than Prometheus.
-See the Micrometer documentation for details.
-
-[source,go]
-----
-include::devguide:example$go/MetricsMicrometer.go[tag=metrics-micrometer-prometheus,indent=0]
-----
-
-
-At this point the metrics are hooked up to Micrometer, and ready to be scraped by Prometheus.
-See the OpenTelemetry documentation above for what metrics to expect.
-
-=== Testing
-For convenience, here is a simple Docker-based Prometheus configuration for localhost testing of a Micrometer metrics setup.
-
-Create file `prometheus.yaml`:
-```
-scrape_configs:
-  - job_name: 'otel-collector'
-
-    scrape_interval: 1s
-
-    static_configs:
-      - targets: ['host.docker.internal:10000']
-        labels:
-          group: 'production'
-```
-
-Now run Prometheus:
-```
-docker run --rm --name prometheus -p 9090:9090  --mount type=bind,source="${PWD}/prometheus.yaml,destination=/etc/prometheus/prometheus.yml" prom/prometheus
-```
-
-Note the Prometheus config uses `host.docker.internal` to connect from a Docker container to the application running on localhost.  
-This will not work on all Docker deployments -- see the Docker documentation for more information on connecting to localhost.
-
-Now run the application.
-
-All being well, Prometheus (the UI is available on http://localhost:9090) should allow querying for `db_couchbase_operations_buckets`.
-(Though a real deployment will generally use another tool, such as Grafana, for visualization.)
-
-If this fails, check http://localhost:9090/api/v1/targets to see if Prometheus is unable to contact the application.

@@ -3,12 +3,29 @@ use crate::timeout::timeout;
 use couchbase::authenticator::{Authenticator, PasswordAuthenticator};
 use couchbase::cluster::Cluster;
 use couchbase::durability_level::DurabilityLevel;
+use couchbase::logging_meter::LoggingMeter;
 use couchbase::options::cluster_options::ClusterOptions;
 use couchbase::options::kv_options::ReplaceOptions;
+use couchbase::threshold_logging_tracer::ThresholdLoggingTracer;
 use serde_json::json;
 use std::time::Duration;
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::EnvFilter;
+use tracing_subscriber::Layer;
 
 pub async fn capella_sample() -> Result<(), ExamplesError> {
+    // Set up logging
+    let filter = EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| EnvFilter::new("info"));
+
+    let subscriber = tracing_subscriber::registry()
+        .with(ThresholdLoggingTracer::new(None)) // Enables periodic slow-operation logging
+        .with(LoggingMeter::new(None)) // Enables periodic logging of operation duration statistics
+        .with(tracing_subscriber::fmt::layer().with_filter(filter));
+
+    tracing::subscriber::set_global_default(subscriber)
+        .expect("Failed to set global tracing subscriber");
+
     // tag::connect[]
     // Update this to your cluster
     let endpoint = "cb.<your-endpoint>.cloud.couchbase.com";
