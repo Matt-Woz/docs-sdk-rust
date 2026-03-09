@@ -115,7 +115,7 @@ tracing-subscriber = { version = "0.3", features = ["fmt"] }
 tracing-opentelemetry = "0.32"
 opentelemetry = "0.31"
 opentelemetry_sdk = "0.31"
-opentelemetry-otlp = { version = "0.31", features = ["grpc-tonic"] }
+opentelemetry-otlp = { version = "0.31", features = ["grpc-tonic", "gzip-tonic"] }
 ----
 
 Then configure the OpenTelemetry pipeline and add its layer to your subscriber stack alongside any other layers:
@@ -127,7 +127,68 @@ include::devguide:example$src/observability.rs[tag=otel-metrics,indent=0]
 
 At this point the SDK is hooked up with the OpenTelemetry metrics and will emit them to the exporter.
 
-A `db.client.operation.duration` histogram is exported, which will appear in Prometheus as db_couchbase_operations.
+A `db.client.operation.duration` histogram is exported, which will appear in Prometheus as `db_client_operation_duration`.
 
-It has these tags: db.couchbase.service ("kv", "query", etc.) and db.operation ("upsert", "query", etc.)
+It has these tags: `db.couchbase.service` ("kv", "query", etc.) and `db.operation` ("upsert", "query", etc.)
+
+=== Testing
+For convenience, here is a simple Docker-based configuration of `opentelemetry-collector` and Prometheus for localhost testing of an OpenTelemetry setup.
+
+Create file `otel.yaml`:
+```
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: '0.0.0.0:4317'
+      http:
+        endpoint: '0.0.0.0:4318'
+
+exporters:
+  debug:
+    verbosity: detailed
+  prometheus:
+    endpoint: '0.0.0.0:10000'
+
+service:
+  pipelines:
+    metrics:
+      receivers: [ otlp ]
+      processors: [ ]
+      exporters: [ prometheus, debug ]
+```
+
+And file `prometheus.yaml`:
+```
+scrape_configs:
+  - job_name: 'otel-collector'
+
+    scrape_interval: 1s
+
+    static_configs:
+      - targets: ['otel:10000']
+        labels:
+          group: 'production'
+```
+
+Now run `opentelemetry-collector` and Prometheus:
+```
+docker network create shared
+docker run --rm --name otel -v "${PWD}/otel.yaml:/etc/otel-local-config.yaml" -p 4317:4317 -p 10000:10000 --network shared otel/opentelemetry-collector --config /etc/otel-local-config.yaml
+docker run --rm --name prometheus -p 9090:9090  --mount type=bind,source="${PWD}/prometheus.yaml,destination=/etc/prometheus/prometheus.yml" --network shared prom/prometheus
+```
+
+Some things to note:
+
+* The containers are put on the same network so they can refer to each other by container name.
+* The app has been told to export metrics over OLTP GRPC to localhost:4317.  `opentelemetry-collector` is listening to this.
+* `opentelemetry-collector` will store the metrics, and exposes port 10000 for Prometheus to periodically scrape.
+
+Now run the application.
+All being well, `opentelemetry-collector` should regularly log that it's receiving the `db.client.operations` metric, as it has been configured with a `debug` exporter.
+
+And Prometheus (the UI is available on http://localhost:9090) should allow querying for `db_couchbase_operations`.
+(Though a real deployment will generally use another tool, such as Grafana, for visualisation.)
+
+If this fails, check http://localhost:9090/api/v1/targets to see if Prometheus is unable to contact `opentelemetry-collector`.
 

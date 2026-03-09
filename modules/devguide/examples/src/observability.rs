@@ -56,7 +56,7 @@ pub fn otel_metrics() {
     };
     use opentelemetry_otlp::{MetricExporter, Protocol, WithExportConfig};
     use opentelemetry_otlp::WithTonicConfig;
-    use tracing_subscriber::{layer::SubscriberExt, Registry};
+    use tracing_subscriber::layer::SubscriberExt;
     use tracing_opentelemetry::MetricsLayer;
     use tracing::instrument::WithSubscriber;
     use couchbase::cluster::Cluster;
@@ -65,10 +65,10 @@ pub fn otel_metrics() {
 
     #[tokio::main]
     async fn main() {
-        let otel_layer = setup_otel_metrics_layer();
+        let meter_provider = setup_otel_meter_provider();
 
         let subscriber = tracing_subscriber::registry()
-            .with(otel_layer)
+            .with(MetricsLayer::new(meter_provider))
             .with(tracing_subscriber::fmt::layer()); // Add any other layers you want
 
         // Scope the subscriber to your SDK calls.
@@ -79,7 +79,7 @@ pub fn otel_metrics() {
             .await;
     }
 
-    fn setup_otel_metrics_layer() -> MetricsLayer<Registry, SdkMeterProvider> {
+    fn setup_otel_meter_provider() -> SdkMeterProvider {
         // Set up an exporter.
         // This exporter exports traces on the OTLP protocol over GRPC to localhost:4317.
         let exporter = MetricExporter::builder()
@@ -123,7 +123,7 @@ pub fn otel_metrics() {
             .with_view(unit_view)
             .build();
 
-        MetricsLayer::new(meter_provider)
+        meter_provider
     }
 
     async fn your_couchbase_sdk_calls() {
@@ -150,17 +150,17 @@ use opentelemetry_sdk::{
     Resource,
 };
 use opentelemetry_otlp::{Protocol, SpanExporter, WithExportConfig};
-use opentelemetry_sdk::trace::SdkTracer;
 use tracing::instrument::WithSubscriber;
 use tracing_subscriber::{layer::SubscriberExt, Registry};
 use tracing_opentelemetry::OpenTelemetryLayer;
 
 #[tokio::main]
 async fn main() {
-    let otel_layer = setup_otel_layer();
+    let tracer_provider = setup_otel_tracer_provider();
+    let tracer = tracer_provider.tracer("my-app");
 
     let subscriber = Registry::default()
-        .with(otel_layer)
+        .with(OpenTelemetryLayer::new(tracer))
         .with(tracing_subscriber::fmt::layer()); // Add any other layers you want
 
     // Scope the subscriber to your SDK calls.
@@ -173,7 +173,7 @@ async fn main() {
         .await;
 }
 
-fn setup_otel_layer() -> OpenTelemetryLayer<Registry, SdkTracer> {
+fn setup_otel_tracer_provider() -> SdkTracerProvider {
     // This exporter exports traces on the OTLP protocol over GRPC to localhost:4317.
     let exporter = SpanExporter::builder()
         .with_tonic()
@@ -207,9 +207,7 @@ fn setup_otel_layer() -> OpenTelemetryLayer<Registry, SdkTracer> {
         )
         .build();
 
-    let tracer = tracer_provider.tracer("my-app");
-
-    OpenTelemetryLayer::new(tracer)
+    tracer_provider
 }
 
 async fn your_couchbase_sdk_calls() {
