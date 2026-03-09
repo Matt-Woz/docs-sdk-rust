@@ -89,7 +89,8 @@ A possible report looks like this (prettified for readability):
 
 Each report contains one object for each service that got used.
 
-For each operation, a total amount of recorded requests is reported, as well as percentiles from a histogram in microseconds. The meta section on top contains information such as the emit interval in seconds so tooling can later calculate numbers like requests per second.
+For each operation, a total amount of recorded requests is reported, as well as percentiles from a histogram in microseconds.
+The meta section on top contains information such as the emit interval in seconds so tooling can later calculate numbers like requests per second.
 
 The LoggingMeter can be configured on the environment as shown above. The following table shows the currently available properties:
 
