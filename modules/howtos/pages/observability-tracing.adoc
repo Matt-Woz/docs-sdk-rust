@@ -6,169 +6,151 @@
 [abstract]
 {description}
 
-To give insight into a request/response flow, the SDK provides a `RequestTracer` interface and ships with both a default implementation as well as modules that can be plugged into feed the traces to external systems (including OpenTelemetry).
+The SDK instruments all operations with https://docs.rs/tracing/latest/tracing/struct.Span.html[`tracing`] spans.
+These can be consumed by any compatible https://docs.rs/tracing-subscriber/latest/tracing_subscriber/layer/index.html[tracing-subscriber Layer], including the shipped `ThresholdLoggingTracer`
+which logs the slowest operations exceeding configurable per-service latency thresholds,
+or an OpenTelemetry backend via the https://docs.rs/tracing-opentelemetry/latest/tracing_opentelemetry/[tracing-opentelemetry] bridge.
 
+All SDK spans are emitted at `trace` level under the `couchbase::tracing` target.
 
-== The Default ThresholdLoggingTracer
+== The ThresholdLoggingTracer
 
-By default, the SDK will emit information about requests that are over a configurable threshold every 10 seconds. 
-Note that if no requests are over the threshold no event / log will be emitted.
+The `ThresholdLoggingTracer` is a tracing_subscriber Layer that collects completed operations and periodically
+emits a JSON report of the slowest ones that exceeded configurable per-service thresholds.
 
-It is possible to customize this behavior by modifying the configuration:
+By default, the SDK emits information about requests that are over a configurable threshold every 10 seconds.
+Note that if no requests are over the threshold, no logs will be emitted.
 
-[source,go]
+Set up your `Cargo.toml` dependencies:
+
+[source,toml]
 ----
-include::devguide:example$go/Tracing.go[tag=tracing-configure,indent=0]
+[dependencies]
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
 ----
 
-In this case the emit interval is one minute and Key/Value requests will only be considered if their latency is greater or equal than two seconds.
+The simplest setup registers `ThresholdLoggingTracer` together with a `fmt` layer for general log output.
+This must be called within a Tokio runtime:
+
+[source,rust]
+----
+include::devguide:example$src/observability.rs[tag=tracing-configure,indent=0]
+----
 
 The JSON blob emitted looks similar to the following (prettified here for readability):
 
 [source,json]
 ----
-[
-   {
-      "top":[
+{
+   "kv": {
+      "total_count": 2,
+      "top_requests": [
          {
-            "operation_name":"GetRequest",
-            "server_us":2,
-            "last_local_id":"E64FED2600000001/00000000EA6B514E",
-            "last_local_address":"127.0.0.1:51807",
-            "last_remote_address":"127.0.0.1:11210",
-            "last_dispatch_us":2748,
-            "last_operation_id":"0x9",
-            "total_us":324653
+            "total_duration_us": 13333,
+            "last_dispatch_duration_us": 13112,
+            "total_dispatch_duration_us": 13112,
+            "operation_name": "get",
+            "last_local_id": "80d81672-0a71-4ab6-8667-80c0f16d3710",
+            "last_remote_socket": "192.168.106.129:11210"
          },
          {
-            "operation_name":"GetRequest",
-            "server_us":0,
-            "last_local_id":"E64FED2600000001/00000000EA6B514E",
-            "last_local_address":"127.0.0.1:51807",
-            "last_remote_address":"127.0.0.1:11210",
-            "last_dispatch_us":1916,
-            "last_operation_id":"0x1b692",
-            "total_us":2007
+            "total_duration_us": 6252,
+            "encode_duration_us": 10,
+            "last_dispatch_duration_us": 6159,
+            "total_dispatch_duration_us": 6159,
+            "operation_name": "upsert",
+            "last_local_id": "4e459355-9550-45fb-b5f4-ea71f5d4d613",
+            "last_remote_socket": "192.168.106.130:11210"
          }
-      ],
-      "service":"kv",
-      "count":2
+      ]
    }
-]
+}
 ----
 
-For each service (e.g. Key/Value or Query) an entry exists in the outer JSON array. 
-The top N (10 by default) slowest operations are collected and displayed, sorted by the total duration. 
+For each service (e.g. Key/Value or Query) an entry exists in the outer JSON array.
+The top N (10 by default) slowest operations are collected and displayed, sorted by the total duration.
 This promotes quick visibility of the "worst offenders" and more efficient troubleshooting.
 
-Please note that in future releases this format is planned to change for easier readability, 
-so we do not provide any stability guarantees on the logging output format and it might change between minor versions.
+**Note:** The stability of this output format is `Uncommitted` and may change between minor versions.
 
-A new, yet to be stabilized, format can be enabled by setting the `com.couchbase.thresholdRequestTracerNewOutputFormat` system property to `true`. 
-More information will be provided as we get closer to stabilization.
+.ThresholdLoggingOptions Properties
+[options="header"]
+|====
+| Property             | Default      | Description
+| `emit_interval`      | 10 seconds   | How often the tracer emits the threshold report.
+| `kv_threshold`       | 500 ms       | Minimum duration for a KV operation to be included.
+| `query_threshold`    | 1 second     | Minimum duration for a Query operation to be included.
+| `search_threshold`   | 1 second     | Minimum duration for a FTS operation to be included.
+| `management_threshold` | 1 second   | Minimum duration for a Management operation to be included.
+| `sample_size`        | 10           | Maximum number of operations to include per service per interval.
+|====
 
-
+[#otel]
 == OpenTelemetry Integration
 
-The built-in tracer is great if you do not have a centralized monitoring system, but if you already plug into the OpenTelemetry ecosystem we want to make sure to provide first-class support.
+The Rust tracing ecosystem integrates with OpenTelemetry via the
+https://crates.io/crates/tracing-opentelemetry[`tracing-opentelemetry`] crate.
+This bridges `tracing` spans to any OpenTelemetry-compatible receiver such as Jaeger, Zipkin, or `opentelemetry-collector`.
 
 === Exporting to OpenTelemetry
 
-This method exports tracing telemetry in OpenTelemetry's standard format (OTLP), which can be sent to any OTLP-compatible receiver such as Jaeger, Zipkin, or `opentelemetry-collector`.
+Add the relevant dependencies to your `Cargo.toml`:
 
-Add this to your Maven, or the equivalent to your build tool of choice:
-
-[source,xml]
+[source,toml]
 ----
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>io.opentelemetry</groupId>
-            <artifactId>opentelemetry-bom</artifactId>
-            <version>1.17.0</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-<dependencies>
-    <dependency>
-        <groupId>com.couchbase.client</groupId>
-        <artifactId>tracing-opentelemetry</artifactId>
-        <version>1.2.4</version>
-    </dependency>
-    <dependency>
-        <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-api</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-exporter-otlp</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>io.opentelemetry</groupId>
-        <artifactId>opentelemetry-sdk</artifactId>
-    </dependency>
-</dependencies>
+[dependencies]
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
+tracing-opentelemetry = "0.32"
+opentelemetry = "0.31"
+opentelemetry_sdk = "0.31"
+opentelemetry-otlp = { version = "0.31", features = ["grpc-tonic"] }
 ----
 
-And now:
+Configure the OpenTelemetry pipeline and set up your OpenTelemetryLayer:
 
-[source,go]
+[source,rust]
 ----
-include::devguide:example$go/Tracing.go[tag=otel-direct,indent=0]
+include::devguide:example$src/observability.rs[tag=otel-tracing,indent=0]
 ----
 
-At this point the SDK will automatically be exporting spans, and you should see them in your receiver of choice.
+NOTE: You can also register the subscriber with `tracing::subscriber::set_global_default(subscriber)`.
+However, `tracing-opentelemetry` attaches a single `SdkTracer`, so all tracing spans in the process will share this tracer.
 
 === OpenTelemetry Troubleshooting
 
-* There are many ways to export spans.  
-The example is exporting OpenTelemetry Protocol (OTLP) spans over GRPC to port 4317, which we believe is the _de facto_ standard for OpenTelemetry.  
-Make sure that your receiver is compatible with this, e.g. has these ports open and is ready to receive OTLP traffic over GRPC.  
+* There are many ways to export spans.
+The example is exporting OpenTelemetry Protocol (OTLP) spans over GRPC to port 4317, which we believe is the _de facto_ standard for OpenTelemetry.
+Make sure that your receiver is compatible with this, e.g. has these ports open and is ready to receive OTLP traffic over GRPC.
 With https://www.jaegertracing.io/docs/1.41/getting-started/[Jaeger in Docker] this is achieved with the options `-e COLLECTOR_OTLP_ENABLED=true` and `-p 4317:4317`.
-* The exporter used in this example is `BatchSpanProcessor`, which may not have a chance to export spans if the application exits very quickly (e.g. a test application).  
-`SimpleSpanProcessor` can be used instead, though is not likely suitable for production.
-* The example above uses `Sampler.alwaysOn()`, which exports every span.  
+* The exporter used in this example is `BatchSpanProcessor`, which may not have a chance to export spans if the application exits very quickly (e.g. a test application).
+`SimpleSpanProcessor` can be used instead, though is not suitable for most production use cases.
+* The example above uses `Sampler.alwaysOn()`, which exports every span.
 This may need to be reduced to avoid overwhelming the receiver, with e.g. `Sampler.traceIdRatioBased(0.01)` to sample 1% of all traces.
-* It can be worth sending traces into https://opentelemetry.io/docs/collector/[OpenTelemetry Collector], and forwarding them on from there to your receiver of choice.  
+* It can be worth sending traces into https://opentelemetry.io/docs/collector/[OpenTelemetry Collector], and forwarding them on from there to your receiver of choice.
 Among other capabilities the collector can log traces it receives, making for easier debugging.
 
-=== Parent spans
+== Parent spans
 
-If you want to set a parent for a SDK request, you can do it in the respective `*Options`:
+Because the SDK uses the `tracing` crate for instrumentation, parent span context is inherited automatically.
+Any SDK call made while a `tracing` span is entered will nest its spans beneath it.
 
-[source,go]
+In synchronous code this happens naturally when the span is entered in the same thread.
+In async code, however, futures can be polled across different tasks, so you need to attach the span explicitly using the https://docs.rs/tracing/latest/tracing/trait.Instrument.html[`Instrument`] trait:
+
+[source,rust]
 ----
-GetResult result = collection.get(
-    "my-doc", 
-    getOptions().parentSpan(OpenTelemetryRequestSpan.wrap(parentSpan))
-)
-----
+use tracing::Instrument;
 
+let parent_span = tracing::info_span!("my-parent-span");
 
-== OpenTracing Integration
-
-In addition to OpenTelemetry, we also provide support for OpenTracing for legacy systems which have not yet migrated to OpenTelemetry. 
-Note that we still recommend to migrate eventually since OpenTracing has been sunsetted.
-
-You need to include the `tracing-opentracing` module:
-
-[source,xml]
-----
-<dependency>
-    <groupId>com.couchbase.client</groupId>
-    <artifactId>tracing-opentracing</artifactId>
-    <version>0.3.3</version>
-</dependency>
+let result = collection
+    .get("my-doc-id", GetOptions::default())
+    .instrument(parent_span)
+    .await?;
 ----
 
-And then create an OpenTracing `Tracer` and pass it to the SDK:
+`.instrument()` moves the span into the future, entering and exiting it each time the future is polled.
+This ensures SDK spans emitted during the `get` call appear as children of `parent_span` in whatever backend is configured.
 
-[source,go]
-----
-ClusterEnvironment environment = ClusterEnvironment
-    .builder()
-    .requestTracer(OpenTracingRequestTracer.wrap(tracer))
-    .build();
-----

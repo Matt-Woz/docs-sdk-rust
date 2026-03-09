@@ -16,6 +16,7 @@ mod timeout;
 mod transcoding;
 mod user_management;
 mod logging;
+mod observability;
 
 #[tokio::main]
 async fn main() {
