@@ -185,9 +185,9 @@ Some things to note:
 * `opentelemetry-collector` will store the metrics, and exposes port 10000 for Prometheus to periodically scrape.
 
 Now run the application.
-All being well, `opentelemetry-collector` should regularly log that it's receiving the `db.client.operations` metric, as it has been configured with a `debug` exporter.
+All being well, `opentelemetry-collector` should regularly log that it's receiving the `db.client.operation.duration` metric, as it has been configured with a `debug` exporter.
 
-And Prometheus (the UI is available on http://localhost:9090) should allow querying for `db_couchbase_operations`.
+And Prometheus (the UI is available on http://localhost:9090) should allow querying for `db_client_operation_duration`.
 (Though a real deployment will generally use another tool, such as Grafana, for visualisation.)
 
 If this fails, check http://localhost:9090/api/v1/targets to see if Prometheus is unable to contact `opentelemetry-collector`.
