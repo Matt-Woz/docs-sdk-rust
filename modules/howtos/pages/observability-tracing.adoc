@@ -72,7 +72,7 @@ For each service (e.g. Key/Value or Query) an entry exists in the outer JSON arr
 The top N (10 by default) slowest operations are collected and displayed, sorted by the total duration.
 This promotes quick visibility of the "worst offenders" and more efficient troubleshooting.
 
-**Note:** The stability of this output format is Uncommitted and may change between minor versions.
+**Note:** The stability of this output format is `Uncommitted` and may change between minor versions.
 
 .ThresholdLoggingOptions Properties
 [options="header"]
