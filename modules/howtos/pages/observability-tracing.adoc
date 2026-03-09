@@ -133,7 +133,8 @@ Among other capabilities the collector can log traces it receives, making for ea
 
 == Parent spans
 
-Because the SDK uses the `tracing` crate for instrumentation, parent span context is inherited automatically, any SDK call made while a `tracing` span is entered will nest its spans beneath it.
+Because the SDK uses the `tracing` crate for instrumentation, parent span context is inherited automatically.
+Any SDK call made while a `tracing` span is entered will nest its spans beneath it.
 
 In synchronous code this happens naturally when the span is entered in the same thread.
 In async code, however, futures can be polled across different tasks, so you need to attach the span explicitly using the https://docs.rs/tracing/latest/tracing/trait.Instrument.html[`Instrument`] trait:
