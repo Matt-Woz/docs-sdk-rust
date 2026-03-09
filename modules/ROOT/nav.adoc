@@ -31,7 +31,7 @@
 ** xref:concept-docs:full-text-search-overview.adoc[Understanding Search]
 *** xref:howtos:full-text-searching-with-sdk.adoc[Using the Search Service]
 // ** xref:howtos:analytics-using-sdk.adoc[]
-// * xref:howtos:distributed-acid-transactions-from-the-sdk.adoc[Distributed ACID Transactions]
+* xref:howtos:distributed-acid-transactions-from-the-sdk.adoc[Distributed ACID Transactions]
 // ** xref:howtos:transactions-single-query.adoc[]
 // ** xref:howtos:transactions-tracing.adoc[]
 // ** xref:concept-docs:transactions.adoc[]
