@@ -48,6 +48,51 @@ The best way to accommodate developing an application that is to be deployed to 
 
 
 
+== Couchbase Operational Cluster Feature Compatibility
+
+// tag::feature-compat[]
+All of the SDKs have API compatibility with most of the features in Couchbase Operational CLusters --
+whether self-managed, or Capella.
+The following table covers possible exceptions, and gives the version of the {name-sdk} and Couchbase Server with which some features were introduced.
+
+.Couchbase Server and SDK Supported Version Matrix
+[.table-merge-cells]
+[cols="7,6,6"]
+
+|===
+| | Server 7.6.x  | Server 8.0
+
+| KV Range Scan
+2+| All SDK versions
+
+| Vector Search
+2+| All SDK versions
+
+| Zone aware replica reads
+2+| All SDK versions
+
+| KV preferred server groups reads 
+2+| All SDK versions
+
+| Vector Query using GSI
+2+| All SDK versions
+
+| Distributed ACID Transactions  
+2+| N/A
+
+| Response Time Observability 
+2+| All supported SDK versions
+
+| Field Level Encryption 
+2+| N/A
+
+| Cloud Native Gateway  
+2+| N/A
+|===
+// end::feature-compat[]
+
+
+
 // == Migration
 // 
 // This section also contains information on xref:migrating-sdk-code-to-3.n.adoc[migrating from the previous version of the SDK API].
@@ -57,9 +102,9 @@ The best way to accommodate developing an application that is to be deployed to 
 
 == Further Reading
 
-* Integrate Couchbase with your data ecosystem:
-** xref:project-docs:third-party-integrations.adoc[SDK Integrations]
-** xref:server:develop:integrations.adoc[Integrations across Couchbase]
+// * Integrate Couchbase with your data ecosystem:
+// ** xref:project-docs:third-party-integrations.adoc[SDK Integrations]
+* xref:server:develop:integrations.adoc[Integrations across Couchbase]
 * xref:project-docs:get-involved.adoc[Contribute to the SDK] 
 
 === Deploying Couchbase Server

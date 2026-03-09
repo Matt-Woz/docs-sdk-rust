@@ -114,6 +114,7 @@ include::{version-common}@sdk:shared:partial$capella.adoc[tag=cloud]
 |===
 
 This table is not an exhaustive list -- just a few highlights -- provided to help assess compatibility of older versions in particular.
+For a slightly fuller table, see the xref:deployment.adoc#couchbase-operational-cluster-feature-compatibility[Deployment page].
 For alignment of SDKs and new Server features, scroll down to the information below the <<api-version,API Version table>>.
 
 === API Version
