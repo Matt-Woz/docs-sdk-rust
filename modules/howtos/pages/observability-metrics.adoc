@@ -18,7 +18,8 @@ are layers that can be composed on a single tracing https://docs.rs/tracing-core
 
 == The LoggingMeter
 
-`LoggingMeter` is a `tracing_subscriber::Layer` that collects per-operation latency histograms and emits a JSON report on a configurable interval. If no other meters are enabled then it is *strongly* advised that you enable this by default to aid with debugging, along with the `ThresholdLoggingTracer`
+`LoggingMeter` is a `tracing_subscriber::Layer` that collects per-operation latency histograms and emits a JSON report on a configurable interval.
+If no other meters are enabled then it is *strongly* advised that you enable this by default to aid with debugging, along with the `ThresholdLoggingTracer`
 
 Set up your `Cargo.toml` dependencies:
 
