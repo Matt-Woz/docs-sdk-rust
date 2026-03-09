@@ -8,14 +8,14 @@ nav:
 asciidoc:
   attributes:
     page-nav-header-levels: 2
-    server_version: '8.0.0'
+    server_version: '8.0.1'
     sdk_current_version: '1.0.0'
     sdk_dot_minor: '1.0'
     sdk_dot_major: '1.x'
     version-server: '8.0'
-    version-common: '8.0'
+    version-common: '8.0.1'
     name_platform: 'Rust'
     name-sdk: 'Rust SDK'
-    sdk_api: '3.8'
+    sdk_api: '3.9'
     sdk-api-link: https://docs.rs/couchbase/latest/couchbase/
     sdk-gh-link: https://github.com/couchbaselabs/couchbase-rs/
