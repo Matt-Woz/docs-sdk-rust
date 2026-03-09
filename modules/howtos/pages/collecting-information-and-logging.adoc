@@ -70,7 +70,7 @@ The SDK emits events under two special targets that deserve attention:
 
 `couchbase::tracing`::
 The SDK orchestrates `tracing` https://docs.rs/tracing/latest/tracing/span/index.html[spans] to this target at trace level. Filter this target off on your logger if you don't want span noise in your log output.
-Note that this target _is_ still needed if you have any layers consuming SDK spans, such as the xref:observability-tracing.adoc[ThresholdLoggingTracer or OpenTelemetry layer] in your subscriber stack — `EnvFilter` filtering can be done per-layer, so other layers can still receive them.
+Note that this target _is_ still needed if you have any layers consuming SDK spans, such as the xref:observability-tracing.adoc[ThresholdLoggingTracer or OpenTelemetry layer] in your subscriber stack -- `EnvFilter` filtering can be done per-layer, so other layers can still receive them.
 
 `couchbase::metrics`::
 Internal metrics events intended exclusively for metrics backends such as the xref:observability-metrics.adoc[`LoggingMeter` or OpenTelemetry `MetricsLayer`].
