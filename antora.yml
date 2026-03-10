@@ -18,4 +18,4 @@ asciidoc:
     name-sdk: 'Rust SDK'
     sdk_api: '3.9'
     sdk-api-link: https://docs.rs/couchbase/latest/couchbase/
-    sdk-gh-link: https://github.com/couchbaselabs/couchbase-rs/
+    sdk-gh-link: https://github.com/couchbase/couchbase-rs/
