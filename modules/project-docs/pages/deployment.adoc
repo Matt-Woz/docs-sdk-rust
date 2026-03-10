@@ -73,7 +73,7 @@ The following table covers possible exceptions, and gives the version of the {na
 
 | KV preferred server groups reads 
 2+| All SDK versions
-'   
+
 | Vector Query using GSI
 2+| All SDK versions
 
