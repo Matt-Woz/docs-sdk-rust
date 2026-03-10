@@ -135,7 +135,7 @@ Here's how to specify the `RequestPlus` scan consistency level:
 
 [source,rust]
 ----
-include::devguide:example$src/queries.rs[tag=requestplus,indent=0]
+include::devguide:example$src/queries.rs[tag=request_plus_query,indent=0]
 ----
 
 And the `AtPlus` level is represented with `QueryScanConsistency.ConsistentWith`:
