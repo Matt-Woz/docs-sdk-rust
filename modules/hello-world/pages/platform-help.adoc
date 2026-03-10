@@ -10,11 +10,11 @@ A simple Rust orientation intro for _non-_Rust folk who are evaluating the Couch
 
 [IMPORTANT]
 .Is This Page for You?
-====
+----
 This page is to help evaluate the Couchbase Rust SDK, if Rust is not where you spend the majority of your working day. 
 It is aimed at Software Architects, QE folk, managers, and anyone else who needs to run through using the Rust SDK without necessarily being comfortable with installing and developing with Rust.
 If this is not you, head back to the xref:overview.adoc[rest of the Couchbase Rust SDK documentation].
-====
+----
 
 
 == Installing 
@@ -30,17 +30,30 @@ please see https://forge.rust-lang.org/infra/other-installation-methods.html[the
 
 .Installing the Rust Language
 [source,console]
-====
+----
 $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-====
+----
 
 If you've installed `rustup` in the past, you can update it with:
 
 [source,console]
-====
+----
 $ rustup update
-====
+----
 
+=== C Compiler
+
+You will need a linker -- which you most likely have installed already -- 
+and a C compiler, as several crates (Rust packages) depend on C code.
+
+For Ubuntu, these packages are usually installed as part of `build-essentials`.
+Otherwise, install your distribution's prefered C compiler -- usually `gcc`, but it may be `clang`.
+On OSX, 
+
+[source,console]
+----
+$ xcode-select --install
+----
 
 === PATH
 
@@ -51,16 +64,16 @@ You will want to add this to your `$PATH` (using your platform's preferred place
 Once you've add to your path, restart the console, and test the installation with:
 
 [source,console]
-====
+----
 $ rustc --version
-====
+----
 
 Which should return something like:
 
 [source,console]
-====
+----
 rustc 1.94.0 (4a4ef493e 2026-03-02)
-====
+----
 
 
 
