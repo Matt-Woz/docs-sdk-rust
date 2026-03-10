@@ -7,11 +7,11 @@
 :example-source: devguide:example$src/queries.rs
 :example-source-lang: rust
 
-[abstract]
-{description}
+// [abstract]
+// {description}
 
-On this page we dive straight into using the Query Service API from the {name-sdk}.
-For a deeper look at the concepts, to help you better understand the Query Service, the {sqlpp} language, and the Index Service, see the links in the <<further-information,Further Information>> section at the end of this page.
+// On this page we dive straight into using the Query Service API from the {name-sdk}.
+// For a deeper look at the concepts, to help you better understand the Query Service, the {sqlpp} language, and the Index Service, see the links in the <<further-information,Further Information>> section at the end of this page.
 
 include::howtos:partial$n1ql-intro.adoc[]
 include::howtos:partial$n1ql-getting-started.adoc[]
