@@ -10,11 +10,11 @@ A simple Rust orientation intro for _non-_Rust folk who are evaluating the Couch
 
 [IMPORTANT]
 .Is This Page for You?
-----
+====
 This page is to help evaluate the Couchbase Rust SDK, if Rust is not where you spend the majority of your working day. 
 It is aimed at Software Architects, QE folk, managers, and anyone else who needs to run through using the Rust SDK without necessarily being comfortable with installing and developing with Rust.
 If this is not you, head back to the xref:overview.adoc[rest of the Couchbase Rust SDK documentation].
-----
+====
 
 
 == Installing 
