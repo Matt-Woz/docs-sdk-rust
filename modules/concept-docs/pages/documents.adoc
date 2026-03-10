@@ -54,9 +54,9 @@ If you wish to only modify certain parts of a document, you can use xref:subdocu
 include::devguide:example$src/subdocument.rs[tag=upsert,indent=0]
 ----
 
-or xref:{version-server}@server:n1ql:n1ql-language-reference/update.adoc[N1QL UPDATE] to update documents based on specific query criteria:
+or xref:{version-server}@server:n1ql:n1ql-language-reference/update.adoc[{sqlpp} UPDATE] to update documents based on specific query criteria:
 
-[source,n1ql]
+[source,sqlpp]
 ----
 update `default` SET sale_price = msrp * 0.75 WHERE msrp < 19.95;
 ----
@@ -64,14 +64,14 @@ update `default` SET sale_price = msrp * 0.75 WHERE msrp < 19.95;
 
 include::{version-common}@sdk:shared:partial$documents.adoc[tag=get_generic]
 
-[source,n1ql]
+[source,sqlpp]
 ----
 SELECT * FROM default USE KEYS ["docid"];
 ----
 
 or
 
-[source,n1ql]
+[source,sqlpp]
 ----
 SELECT * FROM default WHERE META(default).id = "docid";
 ----
