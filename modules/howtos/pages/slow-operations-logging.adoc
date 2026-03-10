@@ -16,7 +16,7 @@ Threshold logging is the recording of slow operations -- useful for diagnosing w
 
 === Configuring Threshold Logging
 
-To configure threshold logging, adjust the xref:ref:client-settings.adoc#general-options[ThresholdRequestTracer].
+To configure threshold logging, adjust the xref:observability-tracing.adoc#the-thresholdloggingtracer[ThresholdRequestTracer].
 You should expect to see output in JSON format in the logs for the services encountering problems:
 
 [source,json]
@@ -41,16 +41,13 @@ Each entry looks like this, with all fields populated:
 [source,json]
 ----
 {
-  "total_duration_us": 1200,
-  "encode_duration_us": 100,
-  "last_dispatch_duration_us": 40,
-  "total_dispatch_duration_us": 40,
-  "last_server_duration_us": 2,
-  "operation_name": "upsert",
-  "last_local_id": "66388CF5BFCF7522/18CC8791579B567C,
-  "operation_id": "0x23",
-  "last_local_socket": "10.211.55.3:52450",
-  "last_remote_socket": "10.112.180.101:11210"
+    "total_duration_us": 6252,
+    "encode_duration_us": 10,
+    "last_dispatch_duration_us": 6159,
+    "total_dispatch_duration_us": 6159,
+    "operation_name": "upsert",
+    "last_local_id": "4e459355-9550-45fb-b5f4-ea71f5d4d613",
+    "last_remote_socket": "192.168.106.130:11210"
 }
 ----
 
