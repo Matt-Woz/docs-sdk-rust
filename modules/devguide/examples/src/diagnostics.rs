@@ -66,6 +66,51 @@ pub async fn ping(cluster: Cluster) -> Result<(), ExamplesError> {
     Ok(())
 }
 
+pub async fn diagnostics(cluster: Cluster) -> Result<(), ExamplesError> {
+    // #tag::diagnostics[]
+    let result = cluster.diagnostics(None).await?;
+
+    println!("Diagnostics result: {result}");
+    /*
+    {
+      "version": 2,
+      "config_rev": 8101,
+      "id": "a84ef919-abc2-4dd2-8c4d-2220cc645d7c",
+      "sdk": "rust",
+      "services": {
+        "Kv": [
+          {
+            "service_type": "Kv",
+            "id": "701259c9-d43c-4898-832a-f62e2934014b",
+            "local_address": "192.168.106.1:60774",
+            "remote_address": "192.168.106.128:11210",
+            "last_activity": 2395,
+            "state": "Connected"
+          },
+          {
+            "service_type": "Kv",
+            "id": "c7c24770-0746-4493-b0d3-b5013de48bf4",
+            "local_address": "192.168.106.1:60775",
+            "remote_address": "192.168.106.129:11210",
+            "last_activity": 9495,
+            "state": "Connected"
+          },
+          {
+            "service_type": "Kv",
+            "id": "fc883157-95f6-409a-8795-0776e788e6db",
+            "local_address": "192.168.106.1:60773",
+            "remote_address": "192.168.106.130:11210",
+            "last_activity": 357556,
+            "state": "Connected"
+          }
+        ]
+  }
+  */
+    // #end::diagnostics[]
+
+    Ok(())
+}
+
 pub async fn wait_until_ready() -> Result<(), ExamplesError> {
     // #tag::cluster-wait-until-ready[]
     let username = "<your-username>";
