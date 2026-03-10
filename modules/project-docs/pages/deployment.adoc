@@ -75,7 +75,8 @@ The following table covers possible exceptions, and gives the version of the {na
 2+| All SDK versions
 
 | Vector Query using GSI
-2+| All SDK versions
+| N/A
+| All SDK versions
 
 | Distributed ACID Transactions  
 2+| N/A

@@ -110,7 +110,8 @@ include::{version-common}@sdk:shared:partial$capella.adoc[tag=cloud]
 2+| All SDK versions
 
 | Vector Query using GSI
-2+| All SDK versions
+| N/A
+| All SDK versions
 |===
 
 This table is not an exhaustive list -- just a few highlights -- provided to help assess compatibility of older versions in particular.
