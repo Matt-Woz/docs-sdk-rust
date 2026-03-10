@@ -1,6 +1,6 @@
 = Setting Up Couchbase Rust SDK with rustup
 :description: Discover how to get up and running developing applications with the Couchbase Rust SDK -- for those less familiar with Rust.
-:navtitle: Setting Up the Python SDK
+:navtitle: Setting Up the Rust SDK
 
 [abstract]
 {description}
