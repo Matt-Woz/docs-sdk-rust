@@ -1,0 +1,71 @@
+= Setting Up Couchbase Rust SDK with rustup
+:description: Discover how to get up and running developing applications with the Couchbase Rust SDK -- for those less familiar with Rust.
+:navtitle: Setting Up the Python SDK
+
+[abstract]
+{description}
+
+
+A simple Rust orientation intro for _non-_Rust folk who are evaluating the Couchbase Rust SDK.
+
+[IMPORTANT]
+.Is This Page for You?
+====
+This page is to help evaluate the Couchbase Rust SDK, if Rust is not where you spend the majority of your working day. 
+It is aimed at Software Architects, QE folk, managers, and anyone else who needs to run through using the Rust SDK without necessarily being comfortable with installing and developing with Rust.
+If this is not you, head back to the xref:overview.adoc[rest of the Couchbase Rust SDK documentation].
+====
+
+
+== Installing 
+
+First thing is to get up and running with a Rust environment.
+This is done with `rustup`, which allows you to switch between versions, and try out nightly builds, as well as stable and beta releases.
+
+These instructions apply to MacOS and to GNU/Linux.
+Windows use is beyond the scope of this guide --
+please see https://forge.rust-lang.org/infra/other-installation-methods.html[the Rust site].
+
+=== Rustup
+
+.Installing the Rust Language
+[source,console]
+====
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+====
+
+If you've installed `rustup` in the past, you can update it with:
+
+[source,console]
+====
+$ rustup update
+====
+
+
+=== PATH
+
+The Rust toolchain -- including `rustc`, `cargo`, and `rustup` --
+will be installed to the `~/.cargo/bin` directory.
+You will want to add this to your `$PATH` (using your platform's preferred place for environmental variables, such as `.bashrc`).
+
+Once you've add to your path, restart the console, and test the installation with:
+
+[source,console]
+====
+$ rustc --version
+====
+
+Which should return something like:
+
+[source,console]
+====
+rustc 1.94.0 (4a4ef493e 2026-03-02)
+====
+
+
+
+
+== Further Help
+
+One of the best introductions to Rust programming is https://doc.rust-lang.org/book/title-page.html[The Rust Programming Language],
+by Steve Klabnik, Carol Nichols, and Chris Krycho (with contributions from the Rust Community).
