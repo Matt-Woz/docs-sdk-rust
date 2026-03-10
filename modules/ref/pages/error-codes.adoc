@@ -5,49 +5,10 @@
 [abstract]
 {description}
 
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=intro]
-
-== Shared Error Definitions
-
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=shared]
-
-== KeyValue Error Definitions
-
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=kv]
-
-== Query Error Definitions
-
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=query]
-
-== Search Error Definition
-
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=search]
-
-== Management API Error Definitions
-
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=mgmnt]
-
-////
-=== SDK-Specific Error Definitions
-
-ID Range 1000 - 2000
-
-This range is reserved for sdk-specific error codes which are not standardized, but might be used later.
-////
-
-
-
-== Connecting to Cloud
-
-include::{version-common}@sdk:shared:partial$error-ref.adoc[tag=cloud]
-
-
-// need to add in log extract....
-
+The https://docs.rs/couchbase/latest/couchbase/error/enum.ErrorKind.html[Rust SDK API documentation] contains a comprehensive list of all the error codes that can be returned by the SDK, along with their associated documentation.
 
 == Further Reading
 
 * Our practical look at xref:howtos:error-handling.adoc[error handling with the SDK].
 // * xref:howtos:health-check.adoc#diagnostics[Diagnostics] with Health Check.
 * xref:concept-docs:errors.adoc[Discussion document] on handling exceptions.
-* Further reference material in the https://docs.couchbase.com/sdk-api/couchbase-scala-client/com/couchbase/client/scala/index.html[API Guide].
