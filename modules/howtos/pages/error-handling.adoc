@@ -138,7 +138,9 @@ There are no performance differences with both approaches, but make sure that ev
 include::devguide:example$src/retries.rs[tag=shared,indent=0]
 ----
 
-While it is possible to implement the `RetryStrategy` from scratch, we *strongly recommend* that instead the `BestEffortRetryStrategy` is embedded and to only the specifiy `RetryReasons` that need to be customized are handled.
+While it is possible to implement the `RetryStrategy` from scratch, we *strongly recommend* that instead the `BestEffortRetryStrategy` is embedded and to only implement handling of specific `RetryReasons`.
+
+
 In practice, it should look something like this:
 
 [source,rust]
