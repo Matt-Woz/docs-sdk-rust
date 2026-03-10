@@ -42,7 +42,7 @@ The {name-sdk} docs note whenever a shortcut is being taken, but here is a non-e
 * Skipping certificate verification
 // * more
 
-The best way to accommodate developing an application that is to be deployed to production is to use the platform's default approach for configuration files.
+The best way to accommodate developing an application that is to be deployed to production is to use toml files.
 
 
 
@@ -73,7 +73,7 @@ The following table covers possible exceptions, and gives the version of the {na
 
 | KV preferred server groups reads 
 2+| All SDK versions
-
+'   
 | Vector Query using GSI
 2+| All SDK versions
 
