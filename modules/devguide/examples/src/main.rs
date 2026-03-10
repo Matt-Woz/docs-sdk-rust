@@ -8,15 +8,16 @@ mod data_durability_consistency;
 mod diagnostics;
 mod examples_error;
 mod kv_operations;
+mod logging;
+mod observability;
 mod queries;
+mod retries;
 mod search;
 mod start_using;
 mod subdocument;
 mod timeout;
 mod transcoding;
 mod user_management;
-mod logging;
-mod observability;
 
 #[tokio::main]
 async fn main() {
