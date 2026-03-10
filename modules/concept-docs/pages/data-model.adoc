@@ -32,7 +32,6 @@ These data structures are stored as JSON documents in Couchbase, and can therefo
 Using the data structures API may help your application in two ways:
 
 * *Simplicity*: Data structures provide high level operations by which you can deal with documents as if they were container data structures.
-Adding an item to a dictionary is expressed as `MapAdd`, rather than retrieving the entire document, modifying it locally, and then saving it back to the server.
 * *Efficiency*: Data structure operations don't transfer the entire document across the network.
 Only the relevant data is exchanged between client and server, allowing for less network overhead and shorter latency.
 
