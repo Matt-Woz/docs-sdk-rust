@@ -18,7 +18,7 @@ In order to be able to use query on a scope, it is best to at least have a prima
 The easiest way to create this is through the Couchbase Admin UI.
 Simply visit the Query tab then write this in the Query Editor and hit Execute:
 
-[source,n1ql]
+[source,sqlpp]
 ----
 CREATE PRIMARY INDEX ON `travel-sample`.`inventory`.`airline`
 ----
