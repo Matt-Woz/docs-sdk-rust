@@ -48,7 +48,8 @@ and a C compiler, as several crates (Rust packages) depend on C code.
 
 For Ubuntu, these packages are usually installed as part of `build-essentials`.
 Otherwise, install your distribution's prefered C compiler -- usually `gcc`, but it may be `clang`.
-On OSX, 
+
+On OSX:
 
 [source,console]
 ----
