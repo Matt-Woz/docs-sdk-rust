@@ -1,6 +1,155 @@
 = Async & Reactive APIs
-:description: The Couchbase Rust SDK allows the use, and mixing, of three distinct APIs: blocking, asynchronous, and reactive.
+:description: The Rust SDK uses async/await via Tokio for all operations, giving you full control over concurrency and execution.
 :page-toclevels: 2
 
 [abstract]
 {description}
+
+
+The Couchbase Rust SDK is fully asynchronous.
+All operations return `Future`s and must be `.await`ed within an async context.
+The SDK is built on top of https://tokio.rs[Tokio], a popular async runtime for Rust.
+
+To get started, you will need a Tokio runtime.
+The most common approach is to annotate your `main` function with `#[tokio::main]`:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=tokio-main,indent=0]
+----
+
+== Futures and Awaiting
+
+Every SDK operation returns a `Future`.
+You must `.await` the future to drive it to completion.
+Unawaited futures do nothing — Rust's ownership model ensures you are aware of this at compile time.
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=basic-await,indent=0]
+----
+
+== Concurrent Operations
+
+A common pattern is to fire off multiple independent operations concurrently, rather than awaiting them one at a time.
+This can significantly reduce latency when operations are not dependent on each other.
+
+=== Using `join!`
+
+The `tokio::join!` macro awaits multiple futures concurrently and returns all of their results.
+Use this when you have a fixed, known set of operations:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=join,indent=0]
+----
+
+=== Using `join_all`
+
+When you have a dynamic collection of futures (e.g. built from an iterator), use `futures::future::join_all`.
+Because the futures are stored in a collection, they must all have the same return type:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=join-all,indent=0]
+----
+
+Note that `join_all` waits for *all* futures to complete, even if some fail.
+Each result must be checked individually.
+
+=== Using `FuturesUnordered`
+
+For more fine-grained control, such as processing results as they arrive, use `FuturesUnordered` from the `futures` crate:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=futures-unordered,indent=0]
+----
+
+This is particularly useful when you want to act on the first available result without waiting for slower operations.
+
+== Spawning Tasks
+
+To run operations truly in the background (detached from the current async task), use `tokio::spawn`.
+This is useful for fire-and-forget workloads or background processing:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=spawn,indent=0]
+----
+
+== Error Handling in Concurrent Contexts
+
+When running multiple operations concurrently, each operation returns its own `Result`.
+You should handle errors per-operation rather than assuming all will succeed:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=concurrent-errors,indent=0]
+----
+
+If you want to short-circuit on the first error, consider `try_join!` from the `tokio` crate:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=try-join,indent=0]
+----
+
+== Timeouts
+
+The Rust SDK does not have per-operation timeout options.
+Instead, wrap any future with `tokio::time::timeout` to apply a deadline.
+If the deadline is exceeded, the future is cancelled and a `tokio::time::error::Elapsed` error is returned:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=timeout,indent=0]
+----
+
+NOTE: When a `Future` wrapping an in-flight SDK operation is cancelled (e.g. by `tokio::time::timeout`), the SDK may still receive a response from the server for that operation.
+These are reported as _orphaned responses_ and can be useful for diagnosing timeout issues.
+See xref:observability-orphan-logger.adoc[Orphaned Requests Logging] for details.
+
+== Batching with Worker Pools
+
+The Rust SDK is designed to work efficiently across many concurrent async tasks, all sharing the same SDK handles.
+Because `Cluster`, `Bucket`, and `Collection` are all cheaply cloneable, you can pass them freely into `tokio::spawn`ed tasks without any synchronisation overhead.
+
+In the following example we load data from one of the Couchbase sample datasets.
+This sample looks for the dataset in the default location for a Linux install;
+you can find the default locations for other operating systems in the xref:server:cli:cli-intro.adoc[CLI reference].
+
+First, connect to the cluster and obtain a collection handle:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=connect,indent=0]
+----
+
+Next, create a bounded channel and spawn a fixed pool of worker tasks.
+`crossfire::mpmc` receivers are cloneable, so each worker gets its own clone and pulls work independently.
+The bounded capacity means sending blocks when all workers are busy, naturally throttling the loader:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=worker-pool,indent=0]
+----
+
+Iterate the sample zip and send each JSON document into the channel:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=load-data,indent=0]
+----
+
+Finally, drop the sender so workers exit their receive loop once the queue drains, then wait for all tasks to complete:
+
+[source,rust]
+----
+include::devguide:example$src/concurrency.rs[tag=wait,indent=0]
+----
+
+== Additional Resources
+
+* xref:error-handling.adoc[Handling Errors] -- covers `Result`, retries, and ambiguity.
+* https://tokio.rs/tokio/tutorial[Tokio Tutorial] -- in-depth guide to the async runtime used by the SDK.
