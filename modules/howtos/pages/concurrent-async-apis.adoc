@@ -7,11 +7,11 @@
 
 
 The Couchbase Rust SDK is fully asynchronous.
-All operations return `Future`s and must be `.await`ed within an async context.
+All operations return `Future`s and must be ``.await``ed within an async context.
 The SDK is built on top of https://tokio.rs[Tokio], a popular async runtime for Rust.
 
 To get started, you will need a Tokio runtime.
-The most common approach is to annotate your `main` function with `#[tokio::main]`:
+The most common approach is to annotate your `main` function with ``#[tokio::main]``:
 
 [source,rust]
 ----
@@ -113,7 +113,7 @@ See xref:observability-orphan-logger.adoc[Orphaned Requests Logging] for details
 == Batching with Worker Pools
 
 The Rust SDK is designed to work efficiently across many concurrent async tasks, all sharing the same SDK handles.
-Because `Cluster`, `Bucket`, and `Collection` are all cheaply cloneable, you can pass them freely into `tokio::spawn`ed tasks without any synchronisation overhead.
+Because `Cluster`, `Bucket`, and `Collection` are all cheaply cloneable, you can pass them freely into ``tokio::spawn``ed tasks without any synchronisation overhead.
 
 In the following example we load data from one of the Couchbase sample datasets.
 This sample looks for the dataset in the default location for a Linux install;
