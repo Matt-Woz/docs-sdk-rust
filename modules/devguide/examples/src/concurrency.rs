@@ -131,13 +131,15 @@ pub async fn futures_unordered(collection: Collection) -> Result<(), ExamplesErr
 
 pub async fn spawn(collection: Collection) -> Result<(), ExamplesError> {
     // tag::spawn[]
-    // SDK handles are Clone, so they can be moved into spawned tasks.
+    // SDK handles are Clone, so you can clone the handle and move the clone into the task.
+    let col = collection.clone();
     let handle = tokio::spawn(async move {
-        collection.upsert("background-key", json!({"processed": true}), None)
+        col.upsert("background-key", json!({"processed": true}), None)
             .await
     });
 
     // Do other work concurrently while the task runs in the background...
+    collection.get("some-other-key", None).await?;
 
     match handle.await {
         Ok(Ok(_)) => println!("Background upsert succeeded"),
