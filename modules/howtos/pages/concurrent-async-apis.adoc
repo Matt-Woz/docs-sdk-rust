@@ -1,0 +1,6 @@
+= Async & Reactive APIs
+:description: The Couchbase Rust SDK allows the use, and mixing, of three distinct APIs: blocking, asynchronous, and reactive.
+:page-toclevels: 2
+
+[abstract]
+{description}
