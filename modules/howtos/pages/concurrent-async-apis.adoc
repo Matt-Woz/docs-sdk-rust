@@ -5,7 +5,6 @@
 [abstract]
 {description}
 
-== Overview
 
 The Couchbase Rust SDK is fully asynchronous.
 All operations return `Future`s and must be `.await`ed within an async context.
