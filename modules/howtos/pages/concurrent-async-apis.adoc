@@ -7,7 +7,7 @@
 
 
 The Couchbase Rust SDK is fully asynchronous.
-All operations return `Future`s and must be ``.await``ed within an async context.
+All operations return ``Future``s and must be ``.await``ed within an async context.
 The SDK is built on top of https://tokio.rs[Tokio], a popular async runtime for Rust.
 
 To get started, you will need a Tokio runtime.
