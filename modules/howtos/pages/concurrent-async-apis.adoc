@@ -153,4 +153,4 @@ include::devguide:example$src/concurrency.rs[tag=wait,indent=0]
 == Additional Resources
 
 * xref:error-handling.adoc[Handling Errors] — covers `Result`, retries, and ambiguity.
-* https://tokio.rs/tokio/tutorial[Tokio Tutorial] — in-depth guide to the async runtime used by the SDK.
+* https://tokio.rs/tokio/tutorial[Tokio Tutorial] -- in-depth guide to the async runtime used by the SDK.
