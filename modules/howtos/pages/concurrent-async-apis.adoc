@@ -118,7 +118,7 @@ Because `Cluster`, `Bucket`, and `Collection` are all cheaply cloneable, you can
 
 In the following example we load data from one of the Couchbase sample datasets.
 This sample looks for the dataset in the default location for a Linux install;
-you can find the default locations for other operating systems in the https://docs.couchbase.com/server/current/cli/cli-intro.html[CLI reference].
+you can find the default locations for other operating systems in the xref:server:cli:cli-intro.adoc[CLI reference].
 
 First, connect to the cluster and obtain a collection handle:
 
