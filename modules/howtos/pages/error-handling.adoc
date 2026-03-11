@@ -9,7 +9,8 @@
 The developer's job is to be prepared for whatever is likely to come up -- and to try and be prepared for anything that conceivably could come up.
 Couchbase gives you a lot of flexibility, but it is recommended that you equip yourself with an understanding of the possibilities.
 
-// How errors are actually returned (e.g. via `Try`, `Future`, or `Mono`) and handled are covered xref:concurrent-async-apis.adoc[here], so this document will focus instead on specific errors, along with a broader look at error handling strategies.
+See the xref:howtos/pages/concurrent-async-apis.adoc#error-handling-in-concurrent-contexts[async page] for information on error handling in concurrent contexts.
+
 
 == Error Model
 
