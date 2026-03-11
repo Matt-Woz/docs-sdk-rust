@@ -157,7 +157,7 @@ The other option is to provide an action with `RetryAction::new(duration: Durati
 This allows you to customize not only _if_ a request should be retried, but also _when_.
 
 IMPORTANT: Not retrying operations is considered safe from a data-loss perspective.
-If you are changing the retry strategy of individual requests keep the semantics discussed in <<Idempotent vs. Non-Idempotent Requests>> in mind.
+If you are changing the retry strategy of individual requests keep the semantics discussed in <<#idempotent-and-non-idempotent-operations,Idempotent vs. Non-Idempotent Requests>> in mind.
 You can check if a request is idempotent through the `is_idempotent()` function on `RetryRequest`, and also check if the `RetryReason` allows for non-idempotent retry through `allows_non_idempotent_retry()`.
 If in doubt, check the implementation of the `BestEffortRetryStrategy` for guidance.
 
