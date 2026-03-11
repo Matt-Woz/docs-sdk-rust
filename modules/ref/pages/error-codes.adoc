@@ -10,5 +10,5 @@ The https://docs.rs/couchbase/latest/couchbase/error/enum.ErrorKind.html[Rust SD
 == Further Reading
 
 * Our practical look at xref:howtos:error-handling.adoc[error handling with the SDK].
-// * xref:howtos:health-check.adoc#diagnostics[Diagnostics] with Health Check.
-* xref:concept-docs:errors.adoc[Discussion document] on handling exceptions.
+* xref:howtos:health-check.adoc#diagnostics[Diagnostics] with Health Check.
+// * xref:concept-docs:errors.adoc[Discussion document] on handling exceptions.
