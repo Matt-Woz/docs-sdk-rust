@@ -1,4 +1,3 @@
-mod asynchronous;
 mod auth;
 mod binary;
 mod capella_sample;

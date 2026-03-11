@@ -16,7 +16,7 @@ The most common approach is to annotate your `main` function with `#[tokio::main
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=tokio-main,indent=0]
+include::devguide:example$src/concurrency.rs[tag=tokio-main,indent=0]
 ----
 
 == Futures and Awaiting
@@ -27,7 +27,7 @@ Unawaited futures do nothing — Rust's ownership model ensures you are aware of
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=basic-await,indent=0]
+include::devguide:example$src/concurrency.rs[tag=basic-await,indent=0]
 ----
 
 == Concurrent Operations
@@ -42,7 +42,7 @@ Use this when you have a fixed, known set of operations:
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=join,indent=0]
+include::devguide:example$src/concurrency.rs[tag=join,indent=0]
 ----
 
 === Using `join_all`
@@ -52,7 +52,7 @@ Because the futures are stored in a collection, they must all have the same retu
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=join-all,indent=0]
+include::devguide:example$src/concurrency.rs[tag=join-all,indent=0]
 ----
 
 Note that `join_all` waits for *all* futures to complete, even if some fail.
@@ -64,7 +64,7 @@ For more fine-grained control, such as processing results as they arrive, use `F
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=futures-unordered,indent=0]
+include::devguide:example$src/concurrency.rs[tag=futures-unordered,indent=0]
 ----
 
 This is particularly useful when you want to act on the first available result without waiting for slower operations.
@@ -76,7 +76,7 @@ This is useful for fire-and-forget workloads or background processing:
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=spawn,indent=0]
+include::devguide:example$src/concurrency.rs[tag=spawn,indent=0]
 ----
 
 == Error Handling in Concurrent Contexts
@@ -86,14 +86,14 @@ You should handle errors per-operation rather than assuming all will succeed:
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=concurrent-errors,indent=0]
+include::devguide:example$src/concurrency.rs[tag=concurrent-errors,indent=0]
 ----
 
 If you want to short-circuit on the first error, consider `try_join!` from the `tokio` crate:
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=try-join,indent=0]
+include::devguide:example$src/concurrency.rs[tag=try-join,indent=0]
 ----
 
 == Timeouts
@@ -104,7 +104,7 @@ If the deadline is exceeded, the future is cancelled and a `tokio::time::error::
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=timeout,indent=0]
+include::devguide:example$src/concurrency.rs[tag=timeout,indent=0]
 ----
 
 NOTE: When a `Future` wrapping an in-flight SDK operation is cancelled (e.g. by `tokio::time::timeout`), the SDK may still receive a response from the server for that operation.
@@ -124,7 +124,7 @@ First, connect to the cluster and obtain a collection handle:
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=connect,indent=0]
+include::devguide:example$src/concurrency.rs[tag=connect,indent=0]
 ----
 
 Next, create a bounded channel and spawn a fixed pool of worker tasks.
@@ -133,21 +133,21 @@ The bounded capacity means sending blocks when all workers are busy, naturally t
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=worker-pool,indent=0]
+include::devguide:example$src/concurrency.rs[tag=worker-pool,indent=0]
 ----
 
 Iterate the sample zip and send each JSON document into the channel:
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=load-data,indent=0]
+include::devguide:example$src/concurrency.rs[tag=load-data,indent=0]
 ----
 
 Finally, drop the sender so workers exit their receive loop once the queue drains, then wait for all tasks to complete:
 
 [source,rust]
 ----
-include::devguide:example$src/asynchronous.rs[tag=wait,indent=0]
+include::devguide:example$src/concurrency.rs[tag=wait,indent=0]
 ----
 
 == Additional Resources
