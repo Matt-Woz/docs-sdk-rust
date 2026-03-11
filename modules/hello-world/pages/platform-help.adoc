@@ -1,6 +1,7 @@
 = Setting Up Couchbase Rust SDK with rustup
 :description: Discover how to get up and running developing applications with the Couchbase Rust SDK -- for those less familiar with Rust.
-:navtitle: Setting Up the Rust SDK
+:navtitle: Platform Help
+// :navtitle: Setting Up the Rust SDK
 
 [abstract]
 {description}
@@ -76,7 +77,7 @@ Which should return something like:
 rustc 1.94.0 (4a4ef493e 2026-03-02)
 ----
 
-
+Now xref:project-docs:sdk-full-installation.adoc[install the SDK] or try our xref:start-using-sdk.adoc[Quickstart Guide].
 
 
 == Further Help
