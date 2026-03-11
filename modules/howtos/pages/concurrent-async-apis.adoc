@@ -47,7 +47,8 @@ include::devguide:example$src/asynchronous.rs[tag=join,indent=0]
 
 === Using `join_all`
 
-When you have a dynamic collection of futures (e.g. built from an iterator), use `futures::future::join_all`:
+When you have a dynamic collection of futures (e.g. built from an iterator), use `futures::future::join_all`.
+Because the futures are stored in a collection, they must all have the same return type:
 
 [source,rust]
 ----
@@ -109,6 +110,45 @@ include::devguide:example$src/asynchronous.rs[tag=timeout,indent=0]
 NOTE: When a `Future` wrapping an in-flight SDK operation is cancelled (e.g. by `tokio::time::timeout`), the SDK may still receive a response from the server for that operation.
 These are reported as _orphaned responses_ and can be useful for diagnosing timeout issues.
 See xref:observability-orphan-logger.adoc[Orphaned Requests Logging] for details.
+
+== Batching with Worker Pools
+
+The Rust SDK is designed to work efficiently across many concurrent async tasks, all sharing the same SDK handles.
+Because `Cluster`, `Bucket`, and `Collection` are all cheaply cloneable, you can pass them freely into `tokio::spawn`ed tasks without any synchronisation overhead.
+
+In the following example we load data from one of the Couchbase sample datasets.
+This sample looks for the dataset in the default location for a Linux install;
+you can find the default locations for other operating systems in the https://docs.couchbase.com/server/current/cli/cli-intro.html[CLI reference].
+
+First, connect to the cluster and obtain a collection handle:
+
+[source,rust]
+----
+include::devguide:example$src/asynchronous.rs[tag=connect,indent=0]
+----
+
+Next, create a bounded channel and spawn a fixed pool of worker tasks.
+`crossfire::mpmc` receivers are cloneable, so each worker gets its own clone and pulls work independently.
+The bounded capacity means sending blocks when all workers are busy, naturally throttling the loader:
+
+[source,rust]
+----
+include::devguide:example$src/asynchronous.rs[tag=worker-pool,indent=0]
+----
+
+Iterate the sample zip and send each JSON document into the channel:
+
+[source,rust]
+----
+include::devguide:example$src/asynchronous.rs[tag=load-data,indent=0]
+----
+
+Finally, drop the sender so workers exit their receive loop once the queue drains, then wait for all tasks to complete:
+
+[source,rust]
+----
+include::devguide:example$src/asynchronous.rs[tag=wait,indent=0]
+----
 
 == Additional Resources
 

@@ -41,17 +41,18 @@ pub async fn basic_await(collection: Collection) -> Result<(), ExamplesError> {
 
 pub async fn join(collection: Collection) -> Result<(), ExamplesError> {
     // tag::join[]
-    let (first, second, third) = tokio::join!(
+    let (get_result, upsert_result) = tokio::join!(
         collection.get("airline_10", None),
-        collection.get("airline_10123", None),
-        collection.get("airline_10226", None),
+        collection.upsert("airline_10", json!({"type": "airline", "name": "40-Mile Air"}), None),
     );
 
-    for result in [first, second, third] {
-        match result {
-            Ok(doc) => println!("Got: {:?}", doc.content_as::<serde_json::Value>()),
-            Err(e) => println!("Error: {e}"),
-        }
+    match get_result {
+        Ok(doc) => println!("Got: {:?}", doc.content_as::<serde_json::Value>()),
+        Err(e) => println!("Get failed: {e}"),
+    }
+    match upsert_result {
+        Ok(_) => println!("Upsert succeeded"),
+        Err(e) => println!("Upsert failed: {e}"),
     }
     // end::join[]
 
@@ -178,3 +179,90 @@ pub async fn timeout(collection: Collection) -> Result<(), ExamplesError> {
     Ok(())
 }
 
+pub async fn concurrent_operations() -> Result<(), ExamplesError> {
+    // tag::connect[]
+    let username = "<your-username>";
+    let password = "<your-password>";
+    let bucket_name = "travel-sample";
+
+    let cluster = tokio::time::timeout(
+        Duration::from_secs(60),
+        Cluster::connect(
+            // For a secure cluster connection, use `couchbases://<your-cluster-ip>` instead.
+            "couchbase://localhost",
+            ClusterOptions::new(Authenticator::PasswordAuthenticator(
+                PasswordAuthenticator::new(username, password),
+            )),
+        ),
+    )
+    .await.unwrap()?; // Unwrapping for brevity; handle errors as appropriate in production code.
+
+    let bucket = cluster.bucket(bucket_name);
+
+    tokio::time::timeout(Duration::from_secs(30), bucket.wait_until_ready(None)).await.unwrap()?;
+
+    let collection = bucket.default_collection();
+    // end::connect[]
+
+    // tag::worker-pool[]
+    // We'll create 24 worker tasks and a channel with space for a maximum of 1 item per task.
+    // Writing to the channel will block if there are no tasks ready to pick up an item.
+    let num_workers = 24;
+    let (task_sender, task_receiver) =
+        crossfire::mpmc::bounded_async::<(String, serde_json::Value)>(num_workers);
+
+    let workers: Vec<_> = (0..num_workers)
+        .map(|_| {
+            let collection = collection.clone();
+            let receiver = task_receiver.clone();
+            tokio::spawn(async move {
+                while let Ok((doc_id, value)) = receiver.recv().await {
+                    if let Err(e) = collection.upsert(doc_id, value, None).await {
+                        eprintln!("Upsert failed: {e}");
+                    }
+                }
+            })
+        })
+        .collect();
+    // end::worker-pool[]
+
+    // tag::load-data[]
+    let sample_path = format!("/opt/couchbase/samples/{bucket_name}.zip");
+
+    // unwrap used for brevity; handle errors as appropriate in production code.
+    let mut archive =
+        zip::ZipArchive::new(std::fs::File::open(sample_path).unwrap()).unwrap();
+
+    for i in 0..archive.len() {
+        let mut file = archive.by_index(i).unwrap();
+
+        let file_name = file.name().to_string();
+
+        // We only want JSON files from the docs directory.
+        if file.is_dir()
+            || !(file_name.starts_with(&format!("{bucket_name}/docs/"))
+                && file_name.ends_with(".json"))
+        {
+            continue;
+        }
+
+        let mut content = String::new();
+        std::io::Read::read_to_string(&mut file, &mut content).unwrap();
+        let doc_content: serde_json::Value = serde_json::from_str(&content).unwrap();
+
+        task_sender.send((file_name, doc_content)).await.unwrap();
+    }
+    // end::load-data[]
+
+    // tag::wait[]
+    drop(task_sender);
+
+    futures::future::join_all(workers)
+        .await
+        .into_iter()
+        .collect::<Result<Vec<_>, _>>()
+        .unwrap();
+    // end::wait[]
+
+    Ok(())
+}
