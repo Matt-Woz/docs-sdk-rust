@@ -9,16 +9,6 @@
 {description}
 
 
-[IMPORTANT]
-.Developer Preview
-====
-This SDK is a Developer Preview, providing early access before the generally available (GA) release is ready.
-It enables you to play with the APIs to get a sense of how they work.
-Preview Mode features and their use are subject to Couchbase’s “Non-GA Offering Supplemental Terms” set forth in the https://www.couchbase.com/LA08242020[License Agreement]. 
-Preview Mode features may not be functionally complete and are not intended for production use. 
-They are intended for development and testing purposes only.
-====
-
 Version {sdk_dot_minor} of the {name-sdk} implements the {sdk_api} xref:compatibility.adoc#api-version[SDK API].
 See the xref:compatibility.adoc#couchbase-feature-availability-matrix[compatibility pages] for more information on feature compatibility with different versions of Couchbase Server.
 
@@ -29,14 +19,12 @@ See the xref:compatibility.adoc#couchbase-feature-availability-matrix[compatibil
 include::hello-world:start-using-sdk.adoc[tag=quick-install]
 
 
-include::{version-common}@sdk:pages:partial$signed.adoc[tag=signed]
 
-// reminder - add spoiler tag to wrappers for cxx notes?
 
 [#latest-release]
 == {name-sdk} 1.0 Releases
 
-Version 1.0 of the {name-sdk} implements the 3.8 xref:compatibility.adoc#api-version[SDK API].
+Version 1.0 of the {name-sdk} implements the 3.9 xref:compatibility.adoc#api-version[SDK API].
 See the xref:compatibility.adoc#couchbase-feature-availability-matrix[compatibility pages] for more information on feature compatibility with different versions of Couchbase Server.
 
 We always recommend using the latest version of the SDK -- it contains all of the latest security patches and support for new and upcoming features.
@@ -44,22 +32,9 @@ All patch releases for each dot minor release should be API compatible, and safe
 
 Binary compatibility is not guaranteed for any {name-sdk} release, and you should rebuild your application when changing the SDK.
 
-////
-# get version numbers like this
-src=../couchbase-jvm-clients
-grep '<reactor.version>' $src/pom.xml
-grep ' <reactive-streams.version>' $src/pom.xml
-////
 
 
-////
-=== Version 1.0.0 (???)
+[v1.0.0]
+=== Version 1.0.0 (12 March 2026)
 
-==== Improvements
-
-// TODO: for release captain!
-
-==== Bug Fixes
-
-// TODO: for release captain!
-////
+Initial GA release.

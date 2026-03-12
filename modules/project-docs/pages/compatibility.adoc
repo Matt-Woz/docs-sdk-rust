@@ -14,43 +14,35 @@ The Couchbase {name-sdk} {sdk_dot_minor} Client supports Rust 1.90+.
 
 === OS Compatibility
 
-The {name-sdk} is tested and supported on the following OSs and platforms:
+The {name-sdk} will run on, and is supported on, the following OSs and platforms.
+The SDK has been tested on a representative subset of the platforms listed below.
 
 ****
 [discrete]
 === GNU/Linux
-
 * Amazon Linux 2 & AL2023.
-* Red Hat Enterprise Linux 8 & 9;
-* Oracle Linux 8 & 9.
+* Red Hat Enterprise Linux 8, 9, & 10.
+* Oracle Linux 8, 9, & 10.
 * Ubuntu (LTS) 22.04 (_Jammy_) & 24.04 (_Noble_).
-* Debian 11 (_Bullseye_) & Debian 12 (_Bookworm_).
-* SUSE Enterprise Linux 12 & 15
-* Alpine Linux 3.18 (_Oracle JDK only_) -- but see <<alpine-linux-compatibility, workaround note below>>.
-
+* Debian 11 (_Bullseye_), Debian 12 (_Bookworm_), & Debian 13 (_Trixie_).
+* SUSE Enterprise Linux 12 & 15.
+* Alpine Linux 3.21 - 3.23.
 [discrete]
 === Microsoft Windows
-
 * Microsoft Windows 10 & 11;
-* Windows Server 2019 & 2022.
-
+* Windows Server 2019, 2022, & 2025.
 [discrete]
 === Mac OS X
-
 The current and previous two releases of OS X.
-At time of writing (April 2025): 15 (Sequoia), 14 (Sonoma), and 13 (Ventura).
-M1 ARM architecture is fully supported in the {name-sdk}.
-
-[discrete]
-=== ARM Processor Support
-
-ARM64: support for ARMv8 CPUs, such as the Amazon Graviton series and Apple M1 ARM processors.
+At time of writing (March 2026): 26 (Tahoe), 15 (Sequoia), and 14 (Sonoma).
 ****
 
-The {name-sdk} should also be expected to run on other commonly-available GNU/Linux distributions which support the Rust platform, but not all combinations can be tested.
+
 
 // Network Requirements
 include::{version-common}@sdk:shared:partial$network-requirements.adoc[]
+
+
 
 == Couchbase Server Compatibility
 
@@ -58,11 +50,11 @@ Couchbase SDKs are tested against a variety of different environments to ensure 
 
 === Couchbase Version/SDK Version Matrix
 
-The matrix below denotes the version of Couchbase Server, the version of the Rust SDK and whether the SDK is:
+The matrix below denotes the version of Couchbase Server, the version of the {name-sdk} and whether the SDK is:
 
 * ✖ *Unsupported*: This combination is not tested, and is not within the scope of technical support if you have purchased a support agreement.
 * ◎ *Compatible*: This combination has been tested previously, and should be compatible.
-This combination is not recommended by our technical support organization.
+Nevertheless, this combination is not recommended by our technical support organization, as not all of the latest features are supported by it.
 It is best to upgrade either the SDK or the Couchbase version you are using.
 * ✔ *Supported*: This combination is subject to ongoing quality assurance, and is fully supported by our technical support organization.
 
@@ -71,11 +63,11 @@ It is best to upgrade either the SDK or the Couchbase version you are using.
 |===
 | | 1.0
 
-| *Server 7.0 - 7.2*
-| *✖*
-
 | *Server 7.6 - 8.0*
 | *✔*
+
+| *Server 7.0 - 7.2*
+| *✖*
 |===
 
 
@@ -100,39 +92,30 @@ include::{version-common}@sdk:shared:partial$capella.adoc[tag=cloud]
 
 .Couchbase Server and SDK Supported Version Matrix
 [.table-merge-cells]
-[cols="7,6"]
+[cols="7,6,6"]
+
 |===
-| | Server 7.6
+| | Server 7.6.x  | Server 8.0
 
-| Enhanced Durability
-| All SDK versions
-
-| Durable Writes
-| All SDK versions
-
-| Analytics
-| Not Supported
-
-| Collections
-| All SDK versions
-
-| Scope-Level {sqlpp} (formerly N1QL) Queries & all Collections features
-| All SDK versions
-
-| Request Tracing
-| Not Supported
-
-| Cloud Native Gateway
-| Not Supported
+| KV Range Scan
+2+| All SDK versions
 
 | Vector Search
-| All SDK versions
+2+| All SDK versions
 
-| Vector Query
+| Zone aware replica reads
+2+| All SDK versions
+
+| KV preferred server groups reads 
+2+| All SDK versions
+
+| Vector Query using GSI
+| N/A
 | All SDK versions
 |===
 
 This table is not an exhaustive list -- just a few highlights -- provided to help assess compatibility of older versions in particular.
+For a slightly fuller table, see the xref:deployment.adoc#couchbase-operational-cluster-feature-compatibility[Deployment page].
 For alignment of SDKs and new Server features, scroll down to the information below the <<api-version,API Version table>>.
 
 === API Version

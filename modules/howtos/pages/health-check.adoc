@@ -1,5 +1,5 @@
 = Health Check
-:description: pass:q[Health Check provides `ping()` tests for the health of the network and the cluster.]
+:description: pass:q[Health Check provides `ping()` and `diagnostics()` tests for the health of the network and the cluster.]
 :page-aliases: concept-docs:health-check.adoc
 // :page-aliases: ROOT:health-check.adoc
 :page-toclevels: 2
@@ -13,7 +13,7 @@ Latencies come and go, so do connections in their entirety.
 Is it a network glitch, or is the remote cluster down?
 Sometimes just knowing the likely cause is enough to get a good start on a workaround, or at least avoid hours wasted on an inappropriate solution.
 
-Health Check features _Ping_ to check nodes are still healthy, and to force idle connections to be kept alive in environments with eager shutdowns of unused resources.
+Health Check features _Ping_ to check nodes are still healthy, and to force idle connections to be kept alive in environments with eager shutdowns of unused resources. _Diagnostics_ requests a report from a node, giving instant health check information.
 
 == Ping
 
@@ -23,6 +23,17 @@ In addition to its use as a monitoring tool, a regular `Ping` can be used in an 
 [source,rust]
 ----
 include::devguide:example$src/diagnostics.rs[tag=ping,indent=0]
+----
+
+== Diagnostics
+
+`Diagnostics` returns a list of the nodes that the SDK currently has (or had) a connection to, and the current status of the connection.
+However this call _does not_ actively poll the nodes, reporting instead the state the last time it tried to access each node.
+If you want the _current_ status, then use xref:#Ping[Ping].
+
+[source,rust]
+----
+include::devguide:example$src/diagnostics.rs[tag=diagnostics,indent=0]
 ----
 
 ////
