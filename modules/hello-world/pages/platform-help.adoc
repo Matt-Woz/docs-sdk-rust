@@ -2,6 +2,7 @@
 :description: Discover how to get up and running developing applications with the Couchbase Rust SDK -- for those less familiar with Rust.
 :navtitle: Platform Help
 // :navtitle: Setting Up the Rust SDK
+:page-toclevels: 2
 
 [abstract]
 {description}
