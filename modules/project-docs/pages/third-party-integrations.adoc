@@ -19,3 +19,10 @@ include::{version-common}@sdk:shared:partial$integrations.adoc[tag=official]
 
 Couchbase Server (Capella or self-managed) offers many partner and community integrations --
 the xref:cloud:third-party:integrations.adoc[] page contains a full listing.
+
+=== IDE Integrations
+
+To make development easier, xref:server:develop:integrations.adoc#ide-integrations[Couchbase plugins] are available for 
+https://marketplace.visualstudio.com/items?itemName=Couchbase.vscode-couchbase[VSCode] and the 
+https://plugins.jetbrains.com/plugin/22131-couchbase[IntelliJ] family of IDEs and editors.
+
