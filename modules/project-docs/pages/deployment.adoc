@@ -51,7 +51,7 @@ The best way to accommodate developing an application that is to be deployed to 
 == Couchbase Operational Cluster Feature Compatibility
 
 // tag::feature-compat[]
-All of the SDKs have API compatibility with most of the features in Couchbase Operational CLusters --
+All of the SDKs have API compatibility with most of the features in Couchbase Operational clusters --
 whether self-managed, or Capella.
 The following table covers possible exceptions, and gives the version of the {name-sdk} and Couchbase Server with which some features were introduced.
 
