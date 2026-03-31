@@ -37,7 +37,19 @@ See the xref:data-durability-acid-transactions.adoc[Data Service section] for in
 
 == Your Use Case
 
-How you combine the Data Service and {sqlpp} should depend on your use case, but you should also examine the other options of longer running (or real time) analytical queries, fuzzy searches (such as full-text search and Geo search), and vector search.
+How you combine the Data Service and {sqlpp} should depend on your use case, but you should also examine the other options of longer running (or real time) xref:enterprise-analytics:intro:intro.adoc[analytical queries], fuzzy searches (such as full-text search and Geo search), and vector search.
+
+
+////
+// Analytics
+* xref:enterprise-analytics:intro:intro.adoc[Enterprise Analytics] & xref:analytics:intro:intro.adoc[Capella Analytics] for real-time analytics, with data stored elsewhere in your data lake.
+* xref:howtos:analytics-using-sdk.adoc[Couchbase Analytics Service (CBAS)] for traditional data analytics against your operational database cluster.
+
+Both use versions of the {sqlpp} query language.
+
+include::{version-common}@sdk:shared:partial$columnar-available.adoc[tag=initial-availability-o]
+////
+
 
 === Search 
 
