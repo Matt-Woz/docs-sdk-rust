@@ -77,7 +77,7 @@ Couchbase Server 7.6.0 (7.6.2 for base64-encoded vectors) -- or recent Capella i
 
 === Examples
 
-==== Single vector query
+==== Single Vector Query
 
 In this first example we are performing a single vector query:
 
@@ -87,7 +87,7 @@ include::devguide:example$src/search.rs[tag=vectorsearch,indent=0]
 ----
 
 Let's break this down.
-We create a `SearchRequest`, which can contain a traditional FTS query `SearchQuery` and/or the new `VectorSearch`.
+We create a `SearchRequest`, which can contain a traditional Search query `SearchQuery` and/or the new `VectorSearch`.
 Here we are just using the latter.
 
 The `VectorSearch` allows us to perform one or more `VectorQuery` s.
@@ -96,7 +96,7 @@ The `VectorQuery` itself takes the name of the document field that contains embe
 
 (Note that Couchbase itself is not involved in generating the vectors, and these will come from an external source such as an embeddings API.)
 
-Finally we execute the `SearchRequest` against the FTS index "travel-sample-index", which has previously been setup to vector index the "vector_field" field.
+Finally we execute the `SearchRequest` against the Search index "travel-sample-index", which has previously been setup to vector index the "vector_field" field.
 
 This happens to be a scoped index so we are using `scope.search()`.
 If it was a global index we would use `cluster.search()` instead - see <<Scoped vs Global Indexes>>.
@@ -150,7 +150,7 @@ from a simple match, as above, to a string query:
 See the link:++https://docs.couchbase.com/sdk-api/couchbase-java-client/com/couchbase/client/java/search/vector/VectorQuery.html#prefilter(com.couchbase.client.java.search.SearchQuery)++[API reference].
 
 
-==== Multiple vector queries
+==== Multiple Vector Queries
 
 You can run multiple vector queries together:
 
@@ -161,9 +161,9 @@ include::devguide:example$src/search.rs[tag=multiplevectors,indent=0]
 
 How the results are combined (ANDed or ORed) can be controlled with `VectorSearchOptions().query_combination()`.
 
-=== Combining FTS and vector queries
+=== Combining Search and Vector Queries
 
-You can combine a traditional FTS query with vector queries:
+You can combine a traditional Search query with vector queries:
 
 [source,rust]
 ----
@@ -180,7 +180,7 @@ hit_score = (query_1_boost * query_1_hit_score) + (query_2_boost * query_2_hit_s
 
 === Query Methods
 
-As part of the Search service, you can use the same xref:full-text-searching-with-sdk.adoc#search-queries[Search query methods] as regular Searches.
+As part of the Search Service, you can use the same xref:full-text-searching-with-sdk.adoc#search-queries[Search query methods] as regular Searches.
 See a fuller list, with Vector properties, in the xref:cloud:search:search-request-params.adoc[Capella docs].
 
 
