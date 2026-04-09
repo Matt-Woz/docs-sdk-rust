@@ -9,7 +9,6 @@
 [abstract]
 {description}
 
-
 Version {sdk_dot_minor} of the {name-sdk} implements the {sdk_api} xref:compatibility.adoc#api-version[SDK API].
 See the xref:compatibility.adoc#couchbase-feature-availability-matrix[compatibility pages] for more information on feature compatibility with different versions of Couchbase Server.
 
@@ -18,9 +17,6 @@ See the xref:compatibility.adoc#couchbase-feature-availability-matrix[compatibil
 * The Couchbase {name-sdk} {sdk_dot_minor} Client supports Rust 1.90+.
 
 include::hello-world:start-using-sdk.adoc[tag=quick-install]
-
-
-
 
 [#latest-release]
 == {name-sdk} 1.0 Releases
@@ -33,7 +29,21 @@ All patch releases for each dot minor release should be API compatible, and safe
 
 Binary compatibility is not guaranteed for any {name-sdk} release, and you should rebuild your application when changing the SDK.
 
+=== Version 1.0.1 (9 April 2026)
 
+Version 1.0.1 is a maintenance release for the Go SDK 1.0.
+
+https://docs.rs/couchbase/1.0.1/couchbase/[API Documentation]
+
+==== New Features and Behavioral Changes
+
+* https://jira.issues.couchbase.com/browse/RSCBC-270[RSCBC-270]: Updated queries to automatically retry when query engine errors indicate to do so.
+* https://jira.issues.couchbase.com/browse/RSCBC-272[RSCBC-272]: Updated logging output.
+
+==== Fixed issues
+
+* https://jira.issues.couchbase.com/browse/RSCBC-267[RSCBC-267]: Fixed an issue where a node unexpectedly going down could lead to a connection storm.
+* https://jira.issues.couchbase.com/browse/RSCBC-268[RSCBC-268]: Fixed an issue where metrics were missing the `db.system.name` field.
 
 [v1.0.0]
 === Version 1.0.0 (12 March 2026)

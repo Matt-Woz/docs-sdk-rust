@@ -314,9 +314,9 @@ checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
 name = "couchbase"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "357e84fa0de95448f51e62bf1c196276a60a8831c14f780b014494f489d69a77"
+checksum = "891097e0e6cc9c270e2d77136c00cd3034db5514206687b0a9b598af0315b355"
 dependencies = [
  "bytes",
  "chrono",
@@ -339,9 +339,9 @@ dependencies = [
 
 [[package]]
 name = "couchbase-connstr"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b2738ed1c98c7c003324e2385670476400b1b67b31332dcbea824b51583fa8e8"
+checksum = "a79a3f21dbc23880221b0a6d47a451fb2726bfbe1fe2f15a8f857e31bd922d01"
 dependencies = [
  "form_urlencoded",
  "hickory-resolver",
@@ -352,9 +352,9 @@ dependencies = [
 
 [[package]]
 name = "couchbase-core"
-version = "1.0.0"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "45876afa83f657e5ab62a2990d60070227918570f0ae4808a886d153d8cd302a"
+checksum = "8726a90e150bf7c26ce9b04f917fda6ff307a5f29ce749e7f307ece3440c9109"
 dependencies = [
  "arc-swap",
  "async-trait",
