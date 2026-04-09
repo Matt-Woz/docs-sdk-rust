@@ -29,21 +29,27 @@ All patch releases for each dot minor release should be API compatible, and safe
 
 Binary compatibility is not guaranteed for any {name-sdk} release, and you should rebuild your application when changing the SDK.
 
+
+[v1.0.1]
 === Version 1.0.1 (9 April 2026)
 
-Version 1.0.1 is a maintenance release for the Go SDK 1.0.
+Version 1.0.1 is a maintenance release for the Rust SDK 1.0.
 
 https://docs.rs/couchbase/1.0.1/couchbase/[API Documentation]
 
 ==== New Features and Behavioral Changes
 
-* https://jira.issues.couchbase.com/browse/RSCBC-270[RSCBC-270]: Updated queries to automatically retry when query engine errors indicate to do so.
-* https://jira.issues.couchbase.com/browse/RSCBC-272[RSCBC-272]: Updated logging output.
+* https://jira.issues.couchbase.com/browse/RSCBC-270[RSCBC-270]:
+Updated queries to automatically retry when query engine errors indicate to do so.
+* https://jira.issues.couchbase.com/browse/RSCBC-272[RSCBC-272]:
+Updated logging output.
 
 ==== Fixed issues
 
-* https://jira.issues.couchbase.com/browse/RSCBC-267[RSCBC-267]: Fixed an issue where a node unexpectedly going down could lead to a connection storm.
-* https://jira.issues.couchbase.com/browse/RSCBC-268[RSCBC-268]: Fixed an issue where metrics were missing the `db.system.name` field.
+* https://jira.issues.couchbase.com/browse/RSCBC-267[RSCBC-267]:
+Fixed an issue where a node unexpectedly going down could lead to a connection storm.
+* https://jira.issues.couchbase.com/browse/RSCBC-268[RSCBC-268]:
+Fixed an issue where metrics were missing the `db.system.name` field.
 
 [v1.0.0]
 === Version 1.0.0 (12 March 2026)
