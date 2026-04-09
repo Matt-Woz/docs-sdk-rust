@@ -2,7 +2,8 @@
 :description: Release notes, brief installation instructions, and download archive for the Couchbase Rust Client.
 :navtitle: Release Notes
 :page-toclevels: 2
-:page-aliases: relnotes-scala-sdk
+:page-partial:
+
 
 // tag::all[]
 [abstract]
@@ -38,3 +39,4 @@ Binary compatibility is not guaranteed for any {name-sdk} release, and you shoul
 === Version 1.0.0 (12 March 2026)
 
 Initial GA release.
+// end::all[]
