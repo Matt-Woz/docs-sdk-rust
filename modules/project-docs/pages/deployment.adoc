@@ -71,32 +71,42 @@ The following table covers possible exceptions, and gives the version of the {na
 | | Server 7.6.x  | Server 8.0
 
 | KV Range Scan
-2+| All SDK versions
-
-| Vector Search
-2+| All SDK versions
+| N/A
+2+| Unsupported
 
 | Zone aware replica reads
-2+| All SDK versions
-
-| KV preferred server groups reads 
-2+| All SDK versions
-
-| Vector Query using GSI
 | N/A
-| All SDK versions
+2+| Unsupported
+
+| Vector Search with Search Vector Index
+| N/A
+2+| From 1.0.0
+
+| Vector Query using Hyperscale Vector Index
+2+| N/A
+| From SDK 1.0.0
+
+| Vector Query using Composite (GSI & vector) index
+2+| N/A
+| From SDK 1.0.0
 
 | Distributed ACID Transactions  
-2+| N/A
+3+| Unsupported
 
-| Response Time Observability 
-2+| All supported SDK versions
+| DNS SRV refresh for serverless environments (AWS Lambda, Azure Functions, and GCP Functions)
+3+| From 1.0.0
+
+| Circuit Breakers
+3+| Unsupported
+
+| OTel 
+3+| From 1.0.0
 
 | Field Level Encryption 
-2+| N/A
+3+| Unsupported
 
 | Cloud Native Gateway  
-2+| N/A
+3+| Unsupported
 |===
 // end::feature-compat[]
 
