@@ -66,47 +66,43 @@ The following table covers possible exceptions, and gives the version of the {na
 .Couchbase Server and SDK Supported Version Matrix
 [.table-merge-cells]
 [cols="7,6,6"]
-
 |===
 | | Server 7.6.x  | Server 8.0
 
 | KV Range Scan
-| N/A
 2+| Unsupported
 
 | Zone aware replica reads
-| N/A
 2+| Unsupported
 
 | Vector Search with Search Vector Index
-| N/A
 2+| From 1.0.0
 
 | Vector Query using Hyperscale Vector Index
-2+| N/A
+| N/A
 | From SDK 1.0.0
 
 | Vector Query using Composite (GSI & vector) index
-2+| N/A
+| N/A
 | From SDK 1.0.0
 
 | Distributed ACID Transactions  
-3+| Unsupported
+2+| Unsupported
 
 | DNS SRV refresh for serverless environments (AWS Lambda, Azure Functions, and GCP Functions)
-3+| From 1.0.0
+2+| From 1.0.0
 
 | Circuit Breakers
-3+| Unsupported
+2+| Unsupported
 
 | OTel 
-3+| From 1.0.0
+2+| From 1.0.0
 
 | Field Level Encryption 
-3+| Unsupported
+2+| Unsupported
 
 | Cloud Native Gateway  
-3+| Unsupported
+2+| Unsupported
 |===
 // end::feature-compat[]
 
