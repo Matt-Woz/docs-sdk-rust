@@ -1,0 +1,45 @@
+name: Check Examples Compile
+
+on:
+  pull_request:
+    paths:
+      - 'modules/devguide/examples/**'
+  workflow_dispatch:
+    inputs:
+      sdk_commit_sha:
+        description: 'Commit SHA of couchbase-rs to use (leave blank for latest main)'
+        required: false
+        default: ''
+
+jobs:
+  check-examples:
+    name: Compile Examples
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout docs-sdk-rust
+        uses: actions/checkout@v4
+
+      - name: Checkout couchbase-rs SDK
+        uses: actions/checkout@v4
+        with:
+          repository: couchbase/couchbase-rs
+          path: couchbase-rs
+          ref: ${{ (github.event_name == 'workflow_dispatch' && inputs.sdk_commit_sha != '') && inputs.sdk_commit_sha || 'main' }}
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Patch Cargo.toml to use local SDK
+        working-directory: modules/devguide/examples
+        run: |
+          cat >> Cargo.toml <<'EOF'
+
+          [patch.crates-io]
+          couchbase = { path = "../../../couchbase-rs/sdk/couchbase" }
+          EOF
+
+      - name: Check examples compile
+        working-directory: modules/devguide/examples
+        run: cargo check
+
