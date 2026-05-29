@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'modules/devguide/examples/**'
+      - '.github/workflows/check-examples.yml'
   workflow_dispatch:
     inputs:
       sdk_commit_sha:
