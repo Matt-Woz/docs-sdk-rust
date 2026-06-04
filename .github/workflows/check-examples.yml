@@ -5,6 +5,7 @@ on:
     paths:
       - 'modules/devguide/examples/**'
       - '.github/workflows/check-examples.yml'
+      - 'antora.yml'
   workflow_dispatch:
     inputs:
       sdk_commit_sha:
