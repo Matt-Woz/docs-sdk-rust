@@ -30,6 +30,26 @@ All patch releases for each dot minor release should be API compatible, and safe
 Binary compatibility is not guaranteed for any {name-sdk} release, and you should rebuild your application when changing the SDK.
 
 
+[v1.0.2]
+=== Version 1.0.2 (11 August 2026)
+
+Version 1.0.2 is a maintenance release for the Rust SDK 1.0.
+
+https://docs.rs/couchbase/1.0.2/couchbase/[API Documentation]
+
+==== New Features and Behavioral Changes
+
+* https://jira.issues.couchbase.com/browse/RSCBC-282[RSCBC-282]:
+Updated key-value error messages to include the underlying cause of the error, giving more context to warnings such as `failed to read frame`.
+
+==== Fixed issues
+
+* https://jira.issues.couchbase.com/browse/RSCBC-281[RSCBC-281]:
+Fixed an issue where an error was logged whilst closing connections during a graceful shutdown.
+* https://jira.issues.couchbase.com/browse/RSCBC-289[RSCBC-289]:
+Fixed an issue where connections to a service could fail over TLS after earlier connections had succeeded.
+TLS session resumption is now disabled.
+
 [v1.0.1]
 === Version 1.0.1 (9 April 2026)
 
