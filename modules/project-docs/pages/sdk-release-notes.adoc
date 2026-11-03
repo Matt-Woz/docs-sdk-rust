@@ -31,6 +31,29 @@ Binary compatibility is not guaranteed for any {name-sdk} release, and you shoul
 
 
 
+[v1.1.1]
+=== Version 1.1.1 (3 November 2026)
+
+Version 1.1.1 is a maintenance release for the Rust SDK 1.1.
+
+https://docs.rs/couchbase/1.1.1/couchbase/[API Documentation]
+
+==== New Features and Behavioral Changes
+
+* https://jira.issues.couchbase.com/browse/RSCBC-320[RSCBC-320]:
+Raised the minimum version of the `webpki-roots` dependency to `1.0.11`.
+
+==== Fixed issues
+
+* https://jira.issues.couchbase.com/browse/RSCBC-298[RSCBC-298]:
+Fixed a panic that could occur when a collection ID was invalidated whilst a request to resolve that collection ID was still in flight.
+* https://jira.issues.couchbase.com/browse/RSCBC-299[RSCBC-299]:
+Fixed an issue where a cluster config received in a `NotMyVbucket` response did not have `$HOST` substituted with the hostname of the node that sent it.
+* https://jira.issues.couchbase.com/browse/RSCBC-300[RSCBC-300]:
+Fixed an issue where the first cluster config fetched during bootstrap did not have `$HOST` substituted with the hostname of the node that sent it.
+* https://jira.issues.couchbase.com/browse/RSCBC-318[RSCBC-318]:
+Fixed an issue where IPv6 hostnames substituted for `$HOST` in a cluster config were wrapped in square brackets twice.
+
 [v1.1.0]
 === Version 1.1.0 (7 October 2026)
 
